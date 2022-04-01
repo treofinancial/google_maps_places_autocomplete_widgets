@@ -65,45 +65,53 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+        body: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
 
-                
-                /******** */
-                //import the plugin
-                // and configure
-                MapsPlacesAutocomplete(
-                  onSuggestionClick: onSuggestionClick
-                ),
-                /******** */
+                  Container(color: Colors.blue, height:200),
+                  //
+                  /******** */
+                  //import the plugin
+                  // and configure
+                  MapsPlacesAutocomplete(
+                    mapsApiKey: 'YOUR GOOGLE KEY',
+                    onSuggestionClick: onSuggestionClick
+                  ),
+                  /******** */
+        
+        
+                  /******** */
+                  // Use the details from callback
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                      Text('Número: ${_streetNumber ?? '---'}'),
+                      Text('Endereço: ${_street ?? '---'}'),
+                      Text('Bairro: ${_vicinity ?? '---'}'),
+                      Text('Cidade: ${_city ?? '---'}'),
+                      Text('Estado: ${_state ?? '---'}'),
+                      Text('País: ${_country ?? '---'}'),
+                      Text('CEP: ${_zipCode ?? '---'}'),
+                      Text('Latitude: ${_lat ?? '---'}'),
+                      Text('Longitude: ${_lng ?? '---'}'),
+                    ]),
+                  ),
 
-
-                /******** */
-                // Use the details from callback
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    Text('Número: ${_streetNumber ?? '---'}'),
-                    Text('Endereço: ${_street ?? '---'}'),
-                    Text('Bairro: ${_vicinity ?? '---'}'),
-                    Text('Cidade: ${_city ?? '---'}'),
-                    Text('Estado: ${_state ?? '---'}'),
-                    Text('País: ${_country ?? '---'}'),
-                    Text('CEP: ${_zipCode ?? '---'}'),
-                    Text('Latitude: ${_lat ?? '---'}'),
-                    Text('Longitude: ${_lng ?? '---'}'),
-                  ]),
-                )
-                
-              ],
+                  Container(color: Colors.red, height:200),
+                  Container(color: Colors.orange, height:200),
+                  Container(color: Colors.blue, height:200),
+                  
+                ],
+              ),
             ),
           ),
         ));

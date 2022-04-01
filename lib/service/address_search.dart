@@ -3,11 +3,12 @@ import 'package:maps_places_autocomplete/api/place_api_provider.dart';
 import 'package:maps_places_autocomplete/model/suggestion.dart';
 
 class AddressSearch extends SearchDelegate<Suggestion> {
-  AddressSearch(this.sessionToken) {
-    apiClient = PlaceApiProvider(sessionToken);
+  AddressSearch(this.sessionToken, this.mapsApiKey) {
+    apiClient = PlaceApiProvider(sessionToken, mapsApiKey);
   }
 
-  final sessionToken;
+  final String sessionToken;
+  final String mapsApiKey;
   late PlaceApiProvider apiClient;
 
   @override

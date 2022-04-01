@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
 import 'package:maps_places_autocomplete/model/suggestion.dart';
@@ -7,13 +6,10 @@ import 'package:maps_places_autocomplete/model/suggestion.dart';
 class PlaceApiProvider {
   final client = Client();
 
-  PlaceApiProvider(this.sessionToken);
+  PlaceApiProvider(this.sessionToken, this.mapsApiKey);
 
-  final sessionToken;
-
-  static const String androidKey = '';
-  static const String iosKey = '';
-  final apiKey = Platform.isAndroid ? androidKey : iosKey;
+  final String sessionToken;
+  final String mapsApiKey;
 
   Future<List<Suggestion>> fetchSuggestions(String input) async {
     final Map<String, dynamic> parameters = <String, dynamic>{
@@ -21,7 +17,7 @@ class PlaceApiProvider {
       'types': 'address',
       'language': 'br',
       'components': 'country:br',
-      'key': apiKey,
+      'key': mapsApiKey,
       'sessiontoken': sessionToken
     };
 
@@ -55,7 +51,7 @@ class PlaceApiProvider {
     final Map<String, dynamic> parameters = <String, dynamic>{
       'place_id': placeId,
       'fields': 'address_component,geometry',
-      'key': apiKey,
+      'key': mapsApiKey,
       'sessiontoken': sessionToken
     };
     final Uri request = Uri(
@@ -78,7 +74,6 @@ class PlaceApiProvider {
 
         place.lat = result['result']['geometry']['location']['lat'] as double;
         place.lng = result['result']['geometry']['location']['lng'] as double;
-
 
         components.forEach((c) {
           final List type = c['types'];
