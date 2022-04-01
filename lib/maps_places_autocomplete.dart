@@ -29,7 +29,6 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
