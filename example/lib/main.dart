@@ -80,8 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   //import the plugin
                   // and configure
                   MapsPlacesAutocomplete(
-                    mapsApiKey: 'YOUR GOOGLE KEY',
-                    onSuggestionClick: onSuggestionClick
+                    mapsApiKey: 'YOUR KEY HERE',
+                    onSuggestionClick: onSuggestionClick,
+                    componentCountry: 'br',
+                    language: 'pt-B'
                   ),
                   /******** */
         

@@ -10,9 +10,15 @@ import 'model/suggestion.dart';
 class MapsPlacesAutocomplete extends StatefulWidget {
   final void Function(Place place) onSuggestionClick;
   final String mapsApiKey;
+  final String? componentCountry;
+  final String? language;
 
   const MapsPlacesAutocomplete(
-      {Key? key, required this.onSuggestionClick, required this.mapsApiKey})
+      {Key? key,
+      required this.onSuggestionClick,
+      required this.mapsApiKey,
+      this.componentCountry,
+      this.language})
       : super(key: key);
 
   @override
@@ -33,7 +39,8 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
     super.initState();
     _controller = TextEditingController();
 
-    _addressService = AddressService(sessionToken, widget.mapsApiKey);
+    _addressService = AddressService(sessionToken, widget.mapsApiKey,
+        widget.componentCountry, widget.language);
 
     focusNode.addListener(() {
       if (focusNode.hasFocus) {
@@ -74,12 +81,20 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
     entry = null;
   }
 
+  void _clearText() {
+    setState(() {
+      _controller.text = '';
+      _suggestions = [];
+    });
+  }
+
   List<Widget> buildList() {
     List<Widget> list = [];
     _suggestions.forEach((s) {
       Widget w = InkWell(
         child: Container(
-          padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
+            padding: const EdgeInsets.all(8),
             width: MediaQuery.of(context).size.width,
             color: Colors.amber[50],
             child: Text(s.description)),
@@ -107,7 +122,7 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
 
   String _lastText = "";
   Future<void> searchAddress(String text) async {
-    if (text != _lastText) {
+    if (text != _lastText && text != "") {
       _lastText = text;
       _suggestions = await _addressService.search(text);
     }
@@ -121,34 +136,32 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
       children: <Widget>[
         CompositedTransformTarget(
           link: layerLink,
-          child: TextField(
-            focusNode: focusNode,
-            controller: _controller,
-            onChanged: (text) async => await searchAddress(text),
-            onTap: () async {
-              // final String sessionToken = const Uuid().v4();
-              // final Suggestion? result = await showSearch(
-              //   context: context,
-              //   delegate: AddressSearch(sessionToken, widget.mapsApiKey),
-              // );
-
-              // //clique no resultado
-              // if (result != null) {
-              //   final Place placeDetails =
-              //       await PlaceApiProvider(sessionToken, widget.mapsApiKey)
-              //           .getPlaceDetailFromId(result.placeId);
-
-              //   setState(() {
-              //     _controller.text = result.description;
-              //     widget.onSuggestionClick(placeDetails);
-              //   });
-              // }
-            },
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
-                hintText: "Digite o endereço com número para melhorar a busca",
-                errorText: null),
+          child: Stack(
+            children: [
+              TextField(
+                focusNode: focusNode,
+                controller: _controller,
+                onChanged: (text) async => await searchAddress(text),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    hintText:
+                        "Digite o endereço com número para melhorar a busca",
+                    errorText: null),
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: InkWell(
+                  onTap: _clearText,
+                  child: Container(
+                      height: 36,
+                      width: 36,
+                      color: Colors.blue,
+                      child: const Icon(Icons.clear)),
+                ),
+              )
+            ],
           ),
         ),
       ],

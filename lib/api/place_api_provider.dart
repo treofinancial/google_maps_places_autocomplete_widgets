@@ -6,20 +6,27 @@ import 'package:maps_places_autocomplete/model/suggestion.dart';
 class PlaceApiProvider {
   final client = Client();
 
-  PlaceApiProvider(this.sessionToken, this.mapsApiKey);
+  PlaceApiProvider(this.sessionToken, this.mapsApiKey, this.compomentCountry, this.language);
 
   final String sessionToken;
   final String mapsApiKey;
+  final String? compomentCountry;
+  final String? language;
 
   Future<List<Suggestion>> fetchSuggestions(String input) async {
     final Map<String, dynamic> parameters = <String, dynamic>{
       'input': input,
       'types': 'address',
-      'language': 'br',
-      'components': 'country:br',
       'key': mapsApiKey,
       'sessiontoken': sessionToken
     };
+
+    if (language !=  null) {
+      parameters.addAll(<String, dynamic>{'language': language});
+    }
+    if (compomentCountry != null) {
+      parameters.addAll(<String, dynamic>{'components': 'country:$compomentCountry'});
+    }
 
     final Uri request = Uri(
         scheme: 'https',
