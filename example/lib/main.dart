@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maps_places_autocomplete/maps_places_autocomplete.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
+import 'package:maps_places_autocomplete/model/suggestion.dart';
 
 void main() {
   runApp(const MyApp());
@@ -79,11 +80,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   /******** */
                   //import the plugin
                   // and configure
-                  MapsPlacesAutocomplete(
-                    mapsApiKey: 'YOUR KEY HERE',
-                    onSuggestionClick: onSuggestionClick,
-                    componentCountry: 'br',
-                    language: 'pt-B'
+                  SizedBox(
+                    height: 40,
+                    child: MapsPlacesAutocomplete(
+                      mapsApiKey: 'YOUR KEY HERE',
+                      onSuggestionClick: onSuggestionClick,
+                      buildItem: (Suggestion suggestion, int index) {
+                        return Container(
+                          margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
+                          padding: const EdgeInsets.all(8),
+                          alignment: Alignment.centerLeft,
+                          color: Colors.white,
+                          child: Text(suggestion.description)
+                        );
+                      },
+                      componentCountry: 'br',
+                      language: 'pt-Br'
+                    ),
                   ),
                   /******** */
         
