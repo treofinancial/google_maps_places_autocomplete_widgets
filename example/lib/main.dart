@@ -94,6 +94,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Text(suggestion.description)
                         );
                       },
+                      inputDecoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                        hintText:
+                            "Digite o endereço com número para melhorar a busca",
+                        errorText: null),
+                      clearButton: const Icon(Icons.close),
                       componentCountry: 'br',
                       language: 'pt-Br'
                     ),

@@ -1,6 +1,6 @@
 name: maps_places_autocomplete
 description: A simple package to places autocomplete address.
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/leandro-zanardi/maps_places_autocomplete
 
 environment:
