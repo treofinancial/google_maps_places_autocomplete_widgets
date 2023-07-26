@@ -166,6 +166,7 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
       _lastText = text;
       _suggestions = await _addressService.search(text);
     }
+    entry!.markNeedsBuild();
   }
 
   InputDecoration getInputDecoration() {

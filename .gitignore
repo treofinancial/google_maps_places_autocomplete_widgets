@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+.vscode
 
 # IntelliJ related
 # *.iml
@@ -22,8 +23,8 @@
 
 # Flutter/Dart/Pub related
 # Libraries should not include pubspec.lock, per https://dart.dev/guides/libraries/private-files#pubspeclock.
-#/pubspec.lock
-#**/doc/api/
-#.dart_tool/
-#.packages
-#build/
+pubspec.lock
+**/doc/api/
+.dart_tool
+.packages
+build/
