@@ -53,7 +53,7 @@ class MapsPlacesAutocomplete extends StatefulWidget {
       this.inputDecoration,
       this.elevation,
       this.overlayOffset = 4,
-      this.showGoogleTradeMark = true,
+      this.showGoogleTradeMark = false,
       this.componentCountry,
       this.language})
       : super(key: key);

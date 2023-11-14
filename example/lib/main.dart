@@ -3,6 +3,8 @@ import 'package:maps_places_autocomplete/maps_places_autocomplete.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
 import 'package:maps_places_autocomplete/model/suggestion.dart';
 
+const TIMS_ACCOUNT_GOOGLE_API_KEY = 'AIzaSyAicHujH9apXiOKnC7nyTM3eRnWq4hN4RM';
+
 void main() {
   runApp(const MyApp());
 }
@@ -33,12 +35,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
+  String? _formattedAddress;
+  String? _streetAddress;
   String? _streetNumber;
   String? _street;
+  String? _streetShort;
   String? _city;
+  String? _county;
   String? _state;
+  String? _stateShort;
   String? _zipCode;
   String? _vicinity;
   String? _country;
@@ -48,10 +53,15 @@ class _MyHomePageState extends State<MyHomePage> {
   // write a function to receive the place details callback
   void onSuggestionClick(Place placeDetails) {
     setState(() {
+      _formattedAddress = placeDetails.formattedAddress;
+      _streetAddress = placeDetails.streetAddress;
       _streetNumber = placeDetails.streetNumber;
       _street = placeDetails.street;
+      _streetShort = placeDetails.streetShort;
       _city = placeDetails.city;
+      _county = placeDetails.county;
       _state = placeDetails.state;
+      _stateShort = placeDetails.stateShort;
       _zipCode = placeDetails.zipCode;
       _country = placeDetails.country;
       _vicinity = placeDetails.vicinity;
@@ -75,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
 
-                  Container(color: Colors.blue, height:200),
                   //
                   /******** */
                   //import the plugin
@@ -83,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     height: 40,
                     child: MapsPlacesAutocomplete(
-                      mapsApiKey: 'YOUR KEY HERE',
+                      mapsApiKey: TIMS_ACCOUNT_GOOGLE_API_KEY,
                       onSuggestionClick: onSuggestionClick,
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
@@ -99,11 +108,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white)),
                         hintText:
-                            "Digite o endereço com número para melhorar a busca",
+                            "Street number",
                         errorText: null),
                       clearButton: const Icon(Icons.close),
-                      componentCountry: 'br',
-                      language: 'pt-Br'
+                      componentCountry: 'us',
+                      language: 'en-Us'
                     ),
                   ),
                   /******** */
@@ -117,22 +126,22 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                      Text('Número: ${_streetNumber ?? '---'}'),
-                      Text('Endereço: ${_street ?? '---'}'),
-                      Text('Bairro: ${_vicinity ?? '---'}'),
-                      Text('Cidade: ${_city ?? '---'}'),
-                      Text('Estado: ${_state ?? '---'}'),
-                      Text('País: ${_country ?? '---'}'),
-                      Text('CEP: ${_zipCode ?? '---'}'),
+                      Text('_formattedAddress: ${_formattedAddress?? '---'}'),
+                      Text('_streetAddress: ${_streetAddress?? '---'}'),
+                      Text('_streetNumber: ${_streetNumber ?? '---'}'),
+                      Text('_street: ${_street ?? '---'}'),
+                      Text('_streetShort: ${_streetShort ?? '---'}'),
+                      Text('_vicinity: ${_vicinity ?? '---'}'),
+                      Text('_city: ${_city ?? '---'}'),
+                      Text('_county: ${_county ?? '---'}'),
+                      Text('_state: ${_state ?? '---'}'),
+                      Text('_stateShort: ${_stateShort ?? '---'}'),
+                      Text('_country: ${_country ?? '---'}'),
+                      Text('_zipCode: ${_zipCode ?? '---'}'),
                       Text('Latitude: ${_lat ?? '---'}'),
                       Text('Longitude: ${_lng ?? '---'}'),
                     ]),
                   ),
-
-                  Container(color: Colors.red, height:200),
-                  Container(color: Colors.orange, height:200),
-                  Container(color: Colors.blue, height:200),
-                  
                 ],
               ),
             ),

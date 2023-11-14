@@ -1,8 +1,13 @@
 class Place {
+  String? formattedAddress;
+  String? streetAddress;
   String? streetNumber;
+  String? streetShort;
   String? street;
   String? city;
+  String? county;
   String? state;
+  String? stateShort;
   String? zipCode;
   String? vicinity;
   String? country;
@@ -10,10 +15,15 @@ class Place {
   double? lng;
 
   Place({
+    this.formattedAddress,
+    this.streetAddress,
     this.streetNumber,
+    this.streetShort,
     this.street,
     this.city,
+    this.county,
     this.state,
+    this.stateShort,
     this.zipCode,
     this.vicinity,
     this.country,
@@ -23,6 +33,6 @@ class Place {
 
   @override
   String toString() {
-    return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode)';
+    return 'Place(formattedAddress:$formattedAddress streetNumber: $streetNumber, streetShort: $streetShort street: $street, city: $city, state:$state startShort:$stateShort county: $county, zipCode: $zipCode)';
   }
 }
