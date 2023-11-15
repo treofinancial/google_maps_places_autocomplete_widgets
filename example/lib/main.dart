@@ -3,8 +3,6 @@ import 'package:maps_places_autocomplete/maps_places_autocomplete.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
 import 'package:maps_places_autocomplete/model/suggestion.dart';
 
-const TIMS_ACCOUNT_GOOGLE_API_KEY = 'AIzaSyAicHujH9apXiOKnC7nyTM3eRnWq4hN4RM';
-
 void main() {
   runApp(const MyApp());
 }
