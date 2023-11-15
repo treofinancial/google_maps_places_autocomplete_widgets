@@ -81,8 +81,8 @@ class PlaceApiProvider {
   Future<Place> getPlaceDetailFromId(String placeId) async {
     // if you want to get the details of the selected place by place_id
     final Map<String, dynamic> parameters = <String, dynamic>{
-      'place_id': placeId,
-      'fields': 'address_component,geometry',
+      'place_id': placeId,  
+      'fields': 'name,formatted_address,address_component,geometry',
       'key': mapsApiKey,
       'sessiontoken': sessionToken
     };
@@ -90,11 +90,21 @@ class PlaceApiProvider {
         scheme: 'https',
         host: 'maps.googleapis.com',
         path: '/maps/api/place/details/json',
+
+   //PlaceApiNew     host: 'places.googleapis.com',
+   //PlaceApiNew     path: '/v1/places/$placeId',
+
         queryParameters: parameters);
 
     print(request.toString());
 
     final response = await client.get(request);
+    /* PlaceApiNew:
+        , headers: {
+            'X-Goog-Api-Key': mapsApiKey,
+            'X-Goog-FieldMask': 'displayName,formattedAddress',
+      });
+    PlaceApiNew */
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
@@ -108,6 +118,8 @@ class PlaceApiProvider {
         // build result
         final place = Place();
 
+        place.formattedAddress = result['result']['formatted_address'];
+        place.name = result['result']['name'];
         place.lat = result['result']['geometry']['location']['lat'] as double;
         place.lng = result['result']['geometry']['location']['lng'] as double;
 
@@ -123,7 +135,7 @@ class PlaceApiProvider {
             place.street = c['long_name'];
             place.streetShort = c['short_name'];
           }
-          if (type.contains('sublocality')) { //TMM'sublocality_level_1')) {
+          if (type.contains('sublocality') || type.contains('sublocality_level_1') ) {
             place.vicinity = c['long_name'];
           }
           if (type.contains('locality')) {

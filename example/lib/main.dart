@@ -15,11 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Google Address AutoComplete Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Google Address AutoComplete'),
     );
   }
 }
@@ -34,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String? _name;
   String? _formattedAddress;
   String? _formattedAddressZipPlus4;
   String? _streetAddress;
@@ -55,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // write a function to receive the place details callback
   void onSuggestionClick(Place placeDetails) {
     setState(() {
+      _name = placeDetails.name;
       _formattedAddress = placeDetails.formattedAddress;
       _formattedAddressZipPlus4 = placeDetails.formattedAddressZipPlus4;
       _streetAddress = placeDetails.streetAddress;
@@ -97,7 +99,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(
                     height: 40,
                     child: MapsPlacesAutocomplete(
-                      mapsApiKey: TIMS_ACCOUNT_GOOGLE_API_KEY,
+
+                      // create a `privatekeys.dart` file and add your API key there 
+                      //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
+                      // the .gitignore file is set so this does not go into source repository.
+                      mapsApiKey: GOOGLE_MAPS_ACCOUNT_API_KEY, 
+
                       onSuggestionClick: onSuggestionClick,
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
@@ -131,6 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                      Text('Name: ${_name?? '---'}'),
                       Text('FormattedAddress: ${_formattedAddress?? '---'}'),
                       Text('FormattedAddressZipPlus4: ${_formattedAddressZipPlus4?? '---'}'),
                       Text('StreetAddress: ${_streetAddress?? '---'}'),
