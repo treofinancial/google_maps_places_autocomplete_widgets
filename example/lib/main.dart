@@ -4,7 +4,6 @@ import 'package:maps_places_autocomplete/maps_places_autocomplete.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
 import 'package:maps_places_autocomplete/model/suggestion.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
