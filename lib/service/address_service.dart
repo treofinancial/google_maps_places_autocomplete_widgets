@@ -13,8 +13,8 @@ class AddressService {
   final String? language;
   late PlaceApiProvider apiClient;
 
-  Future<List<Suggestion>> search(String query) async {
-    return await apiClient.fetchSuggestions(query);
+  Future<List<Suggestion>> search(String query, { bool postalCodeLookup = false }) async {
+    return await apiClient.fetchSuggestions(query, postalCodeLookup: postalCodeLookup);
   }
 
   Future<Place> getPlaceDetail(String placeId) async {

@@ -35,10 +35,11 @@ class PlaceApiProvider {
   final String? compomentCountry;
   final String? language;
 
-  Future<List<Suggestion>> fetchSuggestions(String input) async {
+  Future<List<Suggestion>> fetchSuggestions(String input, { bool postalCodeLookup = false }) async {
     final Map<String, dynamic> parameters = <String, dynamic>{
       'input': input,
-      'types': 'address',
+      'types': postalCodeLookup ? 'postal_code' : 'address',  // this is for looking up fully qualified addresses
+      // Could be used for ZIP lookups//   'types': 'postal_code',
       'key': mapsApiKey,
       'sessiontoken': sessionToken
     };
@@ -160,9 +161,11 @@ class PlaceApiProvider {
         });
 
         place.zipCodePlus4 ??= '${place.zipCode}${place.zipCodeSuffix!=null?'-${place.zipCodeSuffix}':''}';
-        place.streetAddress ??= '${place.streetNumber} ${place.streetShort}';
-        place.formattedAddress ??= '${place.streetNumber} ${place.streetShort}, ${place.city}, ${place.stateShort} ${place.zipCode}';
-        place.formattedAddressZipPlus4 ??= '${place.streetNumber} ${place.streetShort}, ${place.city}, ${place.stateShort} ${place.zipCodePlus4}';
+        if(place.streetNumber!=null) {
+          place.streetAddress ??= '${place.streetNumber} ${place.streetShort}';
+          place.formattedAddress ??= '${place.streetNumber} ${place.streetShort}, ${place.city}, ${place.stateShort} ${place.zipCode}';
+          place.formattedAddressZipPlus4 ??= '${place.streetNumber} ${place.streetShort}, ${place.city}, ${place.stateShort} ${place.zipCodePlus4}';
+        }
         return place;
       }
       throw Exception(result['error_message']);

@@ -53,6 +53,23 @@ class _MyHomePageState extends State<MyHomePage> {
   double? _lat;
   double? _lng;
 
+  // write optional function to determine what is placed in the textfield
+  // control when the user chooses an address.  The default is the `formattedAddress`
+  String? onSuggestionClickFillControl(Place placeDetails) {
+    //  we just want the street address here, for example if we were using
+    //  the address line of the form to trigger the address autocomplete
+    return placeDetails.streetAddress;
+  }
+
+
+  String? onSuggestionClickFillZipCodeControl(Place placeDetails) {
+    //  we just want the zipCodePlus4, for example if we were using
+    //  the zipcode field controll in the form to trigger the zipcode
+    //  autocomplete
+    return placeDetails.zipCodePlus4;
+  }
+
+
   // write a function to receive the place details callback
   void onSuggestionClick(Place placeDetails) {
     setState(() {
@@ -92,10 +109,49 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
 
-                  //
+                // Postalcode lookup
+                const Text('Example of ZipCode/Postal Code lookup:'),
+                SizedBox(
+                    height: 40,
+                    child: MapsPlacesAutocomplete(
+                      postalCodeLookup: true,
+
+                      // create a `privatekeys.dart` file and add your API key there 
+                      //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
+                      // the .gitignore file is set so this does not go into source repository.
+                      mapsApiKey: GOOGLE_MAPS_ACCOUNT_API_KEY, 
+
+                      // optional callback arg for use when you do not want `formattedAddress`
+                      // to be used to fill the autocomplete textfield when an address is chosen.
+                      onSuggestionClickFillControl: onSuggestionClickFillZipCodeControl,
+
+                      onSuggestionClick: onSuggestionClick,
+                      buildItem: (Suggestion suggestion, int index) {
+                        return Container(
+                          margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
+                          padding: const EdgeInsets.all(8),
+                          alignment: Alignment.centerLeft,
+                          color: Colors.blueGrey,
+                          child: Text(suggestion.description)
+                        );
+                      },
+                      inputDecoration: const InputDecoration(
+                        contentPadding: EdgeInsets.all(8),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white)),
+                        hintText:
+                            "Zipcode",
+                        errorText: null),
+                      clearButton: const Icon(Icons.close),
+                      componentCountry: 'us',
+                      language: 'en-Us'
+                    ),
+                  ),
+
+
                   /******** */
-                  //import the plugin
-                  // and configure
+                  // Address lookup
+                  const Text('Example of address lookup:'),
                   SizedBox(
                     height: 40,
                     child: MapsPlacesAutocomplete(
@@ -104,6 +160,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
                       // the .gitignore file is set so this does not go into source repository.
                       mapsApiKey: GOOGLE_MAPS_ACCOUNT_API_KEY, 
+
+                      // optional callback arg for use when you do not want `formattedAddress`
+                      // to be used to fill the autocomplete textfield when an address is chosen.
+                      onSuggestionClickFillControl: onSuggestionClickFillControl,
 
                       onSuggestionClick: onSuggestionClick,
                       buildItem: (Suggestion suggestion, int index) {
@@ -120,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white)),
                         hintText:
-                            "Street number",
+                            "Address",
                         errorText: null),
                       clearButton: const Icon(Icons.close),
                       componentCountry: 'us',

@@ -7,11 +7,17 @@ import 'package:uuid/uuid.dart';
 
 import 'model/suggestion.dart';
 
+export 'package:maps_places_autocomplete/model/place.dart';
+export 'package:maps_places_autocomplete/model/suggestion.dart';
+
 class MapsPlacesAutocomplete extends StatefulWidget {
 
   //callback triggered when a item is selected
   final void Function(Place place) onSuggestionClick;
-  
+
+  //callback triggered when a item is selected
+  final String? Function(Place place)? onSuggestionClickFillControl;
+
   //your maps api key, must not be null
   final String mapsApiKey;
 
@@ -43,17 +49,23 @@ class MapsPlacesAutocomplete extends StatefulWidget {
   //in witch language the results are being returned
   final String? language;
 
+  //PostalCode lookup instead of address lookup (defaults to false)
+  final bool postalCodeLookup;
+
+
   const MapsPlacesAutocomplete(
       {Key? key,
       required this.onSuggestionClick,
       required this.mapsApiKey,
       required this.buildItem,
+      this.onSuggestionClickFillControl,
       this.clearButton,
       this.containerDecoration,
       this.inputDecoration,
       this.elevation,
       this.overlayOffset = 4,
       this.showGoogleTradeMark = false,
+      this.postalCodeLookup = false,
       this.componentCountry,
       this.language})
       : super(key: key);
@@ -63,10 +75,10 @@ class MapsPlacesAutocomplete extends StatefulWidget {
 }
 
 class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
-  final focusNode = FocusNode();
   final layerLink = LayerLink();
   final String sessionToken = const Uuid().v4();
-  late TextEditingController _controller;
+  late final TextEditingController _controller;
+  late final FocusNode _focusNode;
   late AddressService _addressService;
   OverlayEntry? entry;
   List<Suggestion> _suggestions = [];
@@ -75,12 +87,13 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _focusNode = FocusNode();
 
     _addressService = AddressService(sessionToken, widget.mapsApiKey,
         widget.componentCountry, widget.language);
 
-    focusNode.addListener(() {
-      if (focusNode.hasFocus) {
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
         showOverlay();
       } else {
         hideOverlay();
@@ -119,7 +132,7 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
   void _clearText() {
     setState(() {
       _controller.clear();
-      focusNode.unfocus();
+      _focusNode.unfocus();
       _suggestions = [];
     });
   }
@@ -131,10 +144,15 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
       Widget w = InkWell(
         child: widget.buildItem(s, i),
         onTap: () async {
-          _controller.text = s.description;
           hideOverlay();
-          focusNode.unfocus();
+          _focusNode.unfocus();
           Place place = await _addressService.getPlaceDetail(s.placeId);
+          if(widget.onSuggestionClickFillControl!=null) {
+            _controller.text = widget.onSuggestionClickFillControl!(place) ?? '';  
+          } else {
+            // default to full formatted address
+            _controller.text = place.formattedAddress ?? '';
+          }
           widget.onSuggestionClick(place);
         },
       );
@@ -164,7 +182,7 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
   Future<void> searchAddress(String text) async {
     if (text != _lastText && text != "") {
       _lastText = text;
-      _suggestions = await _addressService.search(text);
+      _suggestions = await _addressService.search(text, postalCodeLookup:widget.postalCodeLookup);
     }
     entry!.markNeedsBuild();
   }
@@ -191,7 +209,7 @@ class _MapsPlacesAutocomplete extends State<MapsPlacesAutocomplete> {
       child: Stack(
         children: [
           TextField(
-            focusNode: focusNode,
+            focusNode: _focusNode,
             controller: _controller,
             onChanged: (text) async => await searchAddress(text),
             decoration: getInputDecoration()
