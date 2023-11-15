@@ -4,40 +4,27 @@ import 'package:http/http.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
 import 'package:maps_places_autocomplete/model/suggestion.dart';
 
+/* FOR DEBUGGING */
+void printWrapped(String text) {
+  final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
+  pattern.allMatches(text).forEach((match) => print(match.group(0)));
+}
 
+void printJson(dynamic json, { String? title }) {
+  JsonEncoder encoder = new JsonEncoder.withIndent('  '); 
 
+  // encode it to string
+  String prettyPrint = encoder.convert(json); 
 
-  void printWrapped(String text) {
-    final pattern = new RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  if(title!=null) {
+    print(title);
   }
+  printWrapped( prettyPrint );
+}
 
-  void printJson(dynamic json, { String? title }) {
+const bool debugJson = true;
+/* END FOR DEBUGGING */
 
-    if( title!=null) {
-      if(title.startsWith('VehicleModel.fromJson') ||
-              title.startsWith('CustomerModel.fromJson TYPED CONVERSION') ||
-              title.startsWith('LocationsModel TYPED CONVERSION') ||
-              //title.startsWith('') ||
-              title.startsWith('HomeServiceModel.fromJson Json decode')
-      ) {
-        debugPrint('SKIPPING PRINTING printJson() has been coded to skip this  $title');
-        return;
-      }
-    }
-
-
-    JsonEncoder encoder = new JsonEncoder.withIndent('  '); 
-
-
-    // encode it to string
-    String prettyPrint = encoder.convert(json); 
-
-    if(title!=null) {
-      print(title);
-    }
-    printWrapped( prettyPrint );
-  }
 class PlaceApiProvider {
   final client = Client();
 
@@ -75,9 +62,7 @@ class PlaceApiProvider {
       final result = json.decode(response.body);
       if (result['status'] == 'OK') {
 
-
-printJson(result['predictions'],title:'GOOGLE MAP API RETURN VALUE result["predictions"]');
-
+        if(debugJson) printJson(result['predictions'],title:'GOOGLE MAP API RETURN VALUE result["predictions"]');
 
         // compose suggestions in a list
         return result['predictions']
@@ -115,7 +100,7 @@ printJson(result['predictions'],title:'GOOGLE MAP API RETURN VALUE result["predi
       final result = json.decode(response.body);
       if (result['status'] == 'OK') {
 
-printJson(result['result'],title:'GOOGLE MAP API RETURN VALUE result["result"]');
+        if(debugJson) printJson(result['result'],title:'GOOGLE MAP API RETURN VALUE result["result"]');
 
         final components =
             result['result']['address_components'] as List<dynamic>;
@@ -157,11 +142,15 @@ printJson(result['result'],title:'GOOGLE MAP API RETURN VALUE result["result"]')
           if (type.contains('postal_code')) {
             place.zipCode = c['long_name'];
           }
+          if (type.contains('postal_code_suffix')) {
+            place.zipCodeSuffix = c['long_name'];
+          }
         });
 
+        place.zipCodePlus4 ??= '${place.zipCode}${place.zipCodeSuffix!=null?'-${place.zipCodeSuffix}':''}';
         place.streetAddress ??= '${place.streetNumber} ${place.streetShort}';
         place.formattedAddress ??= '${place.streetNumber} ${place.streetShort}, ${place.city}, ${place.stateShort} ${place.zipCode}';
-
+        place.formattedAddressZipPlus4 ??= '${place.streetNumber} ${place.streetShort}, ${place.city}, ${place.stateShort} ${place.zipCodePlus4}';
         return place;
       }
       throw Exception(result['error_message']);

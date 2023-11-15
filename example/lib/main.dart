@@ -1,9 +1,9 @@
+import 'package:example/privatekeys.dart';
 import 'package:flutter/material.dart';
 import 'package:maps_places_autocomplete/maps_places_autocomplete.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
 import 'package:maps_places_autocomplete/model/suggestion.dart';
 
-const TIMS_ACCOUNT_GOOGLE_API_KEY = 'AIzaSyAicHujH9apXiOKnC7nyTM3eRnWq4hN4RM';
 
 void main() {
   runApp(const MyApp());
@@ -36,6 +36,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? _formattedAddress;
+  String? _formattedAddressZipPlus4;
   String? _streetAddress;
   String? _streetNumber;
   String? _street;
@@ -45,6 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
   String? _state;
   String? _stateShort;
   String? _zipCode;
+  String? _zipCodeSuffix;
+  String? _zipCodePlus4;
   String? _vicinity;
   String? _country;
   double? _lat;
@@ -54,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void onSuggestionClick(Place placeDetails) {
     setState(() {
       _formattedAddress = placeDetails.formattedAddress;
+      _formattedAddressZipPlus4 = placeDetails.formattedAddressZipPlus4;
       _streetAddress = placeDetails.streetAddress;
       _streetNumber = placeDetails.streetNumber;
       _street = placeDetails.street;
@@ -63,6 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
       _state = placeDetails.state;
       _stateShort = placeDetails.stateShort;
       _zipCode = placeDetails.zipCode;
+      _zipCodeSuffix = placeDetails.zipCodeSuffix;
+      _zipCodePlus4 = placeDetails.zipCodePlus4;
       _country = placeDetails.country;
       _vicinity = placeDetails.vicinity;
       _lat = placeDetails.lat;
@@ -126,18 +132,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                      Text('_formattedAddress: ${_formattedAddress?? '---'}'),
-                      Text('_streetAddress: ${_streetAddress?? '---'}'),
-                      Text('_streetNumber: ${_streetNumber ?? '---'}'),
-                      Text('_street: ${_street ?? '---'}'),
-                      Text('_streetShort: ${_streetShort ?? '---'}'),
-                      Text('_vicinity: ${_vicinity ?? '---'}'),
-                      Text('_city: ${_city ?? '---'}'),
-                      Text('_county: ${_county ?? '---'}'),
-                      Text('_state: ${_state ?? '---'}'),
-                      Text('_stateShort: ${_stateShort ?? '---'}'),
-                      Text('_country: ${_country ?? '---'}'),
-                      Text('_zipCode: ${_zipCode ?? '---'}'),
+                      Text('FormattedAddress: ${_formattedAddress?? '---'}'),
+                      Text('FormattedAddressZipPlus4: ${_formattedAddressZipPlus4?? '---'}'),
+                      Text('StreetAddress: ${_streetAddress?? '---'}'),
+                      Text('StreetNumber: ${_streetNumber ?? '---'}'),
+                      Text('Street: ${_street ?? '---'}'),
+                      Text('StreetShort: ${_streetShort ?? '---'}'),
+                      Text('Vicinity: ${_vicinity ?? '---'}'),
+                      Text('City: ${_city ?? '---'}'),
+                      Text('County: ${_county ?? '---'}'),
+                      Text('State: ${_state ?? '---'}'),
+                      Text('StateShort: ${_stateShort ?? '---'}'),
+                      Text('Country: ${_country ?? '---'}'),
+                      Text('ZipCode: ${_zipCode ?? '---'}'),
+                      Text('ZipCodeSuffix: ${_zipCodeSuffix ?? '---'}'),
+                      Text('ZipCodePlus4: ${_zipCodePlus4 ?? '---'}'),
                       Text('Latitude: ${_lat ?? '---'}'),
                       Text('Longitude: ${_lng ?? '---'}'),
                     ]),
