@@ -34,6 +34,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String? _suggestionPlaceId;
+  String? _suggestionDescription;
   String? _name;
   String? _formattedAddress;
   String? _formattedAddressZipPlus4;
@@ -55,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // write optional function to determine what is placed in the textfield
   // control when the user chooses an address.  The default is the `formattedAddress`
-  String? onSuggestionClickFillControl(Place placeDetails) {
+  String? onSuggestionClickGetTextToUseForControl(Place placeDetails) {
     //  we just want the street address here, for example if we were using
     //  the address line of the form to trigger the address autocomplete
     return placeDetails.streetAddress;
@@ -69,9 +71,40 @@ class _MyHomePageState extends State<MyHomePage> {
     return placeDetails.zipCodePlus4;
   }
 
+  // This is called Immediatelly when user clicks suggestion and BEFORE
+  // the async request to get place
+  void onInitialSuggestionClick(Suggestion suggestion) {
+    debugPrint('onInitialSuggestionClick( suggestion:$suggestion )');
+    setState(() {
+      _suggestionDescription = suggestion.description;
+      _suggestionPlaceId = suggestion.placeId;
+      // clear these until they are loaded...
+      _name = 
+        _formattedAddress =
+        _formattedAddressZipPlus4 =
+        _streetAddress = 
+        _streetNumber =
+        _street =
+        _streetShort = 
+        _city = 
+        _county = 
+        _state = 
+        _stateShort = 
+        _zipCode = 
+        _zipCodeSuffix = 
+        _zipCodePlus4 = 
+        _country = 
+        _vicinity =  '....';
+      _lat = 
+        _lng = 0.0;
+    });
+
+  }
+
 
   // write a function to receive the place details callback
   void onSuggestionClick(Place placeDetails) {
+    debugPrint('onSuggestionClick( placeDetails:$placeDetails )');
     setState(() {
       _name = placeDetails.name;
       _formattedAddress = placeDetails.formattedAddress;
@@ -123,8 +156,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       // optional callback arg for use when you do not want `formattedAddress`
                       // to be used to fill the autocomplete textfield when an address is chosen.
-                      onSuggestionClickFillControl: onSuggestionClickFillZipCodeControl,
-
+                      onSuggestionClickGetTextToUseForControl: onSuggestionClickFillZipCodeControl,
+                      onInitialSuggestionClick: onInitialSuggestionClick,
                       onSuggestionClick: onSuggestionClick,
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
@@ -163,8 +196,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
                       // optional callback arg for use when you do not want `formattedAddress`
                       // to be used to fill the autocomplete textfield when an address is chosen.
-                      onSuggestionClickFillControl: onSuggestionClickFillControl,
-
+                      onSuggestionClickGetTextToUseForControl: onSuggestionClickGetTextToUseForControl,
+                      onInitialSuggestionClick: onInitialSuggestionClick,
                       onSuggestionClick: onSuggestionClick,
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
@@ -198,6 +231,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                      Text('Suggestion PlaceId: ${_suggestionPlaceId?? '---'}'),
+                      Text('Suggestion Description: ${_suggestionDescription?? '---'}'),
                       Text('Name: ${_name?? '---'}'),
                       Text('FormattedAddress: ${_formattedAddress?? '---'}'),
                       Text('FormattedAddressZipPlus4: ${_formattedAddressZipPlus4?? '---'}'),
