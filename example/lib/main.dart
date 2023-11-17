@@ -1,8 +1,8 @@
-import 'package:example/privatekeys.dart';
 import 'package:flutter/material.dart';
-import 'package:maps_places_autocomplete/maps_places_autocomplete.dart';
-import 'package:maps_places_autocomplete/model/place.dart';
-import 'package:maps_places_autocomplete/model/suggestion.dart';
+import 'package:flutter/services.dart';
+import 'package:maps_places_autocomplete/maps_places_autocomplete_textfield.dart';
+import 'package:maps_places_autocomplete/maps_places_autocomplete_textformfield.dart';
+import '/privatekeys.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,21 +19,40 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Google Address AutoComplete'),
+      home: DefaultTabController(
+        length: 2, 
+        child: Scaffold(
+        appBar: AppBar(
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'TextField'),
+              Tab(text: 'TextFormField'),
+            ],
+          ),
+          title: const Text('Google Places AutoComplete', style:TextStyle(fontSize:14,fontWeight:FontWeight.bold)),
+        ),
+        body: const TabBarView(
+            children: [
+              TextFieldExample(title: 'TextField Example'),
+              TextFormFieldExample(),
+            ],
+          ),
+        ),
+      ),        
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class TextFieldExample extends StatefulWidget {
+  const TextFieldExample({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<TextFieldExample> createState() => _TextFieldExampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _TextFieldExampleState extends State<TextFieldExample> {
   String? _suggestionPlaceId;
   String? _suggestionDescription;
   String? _name;
@@ -129,11 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: SingleChildScrollView(
+    return SingleChildScrollView(
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -142,13 +157,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
 
-                // Postalcode lookup
+                // Postalcode lookup TextField example
                 const Text('Example of ZipCode/Postal Code lookup:'),
                 SizedBox(
-                    height: 40,
-                    child: MapsPlacesAutocomplete(
+                    height: 60,
+                    child: MapsPlacesAutocompleteTextField(
                       postalCodeLookup: true,
-
+                      keyboardType: TextInputType.number,
+                      maxLength: 5,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                      style: const TextStyle(color: Colors.purple, fontSize:16, fontWeight: FontWeight.bold),
                       // create a `privatekeys.dart` file and add your API key there 
                       //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
                       // the .gitignore file is set so this does not go into source repository.
@@ -159,35 +177,41 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSuggestionClickGetTextToUseForControl: onSuggestionClickFillZipCodeControl,
                       onInitialSuggestionClick: onInitialSuggestionClick,
                       onSuggestionClick: onSuggestionClick,
+                      hoverColor: Colors.blue,  // for desktop platforms with mouse
+                      selectionColor: Colors.blueAccent, // for desktop platforms with mouse
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
-                          margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
+                          margin: const EdgeInsets.fromLTRB(2, 2, 2, 2),  //<<This area will get hoverColor/selectionColor on desktop
                           padding: const EdgeInsets.all(8),
                           alignment: Alignment.centerLeft,
-                          color: Colors.blueGrey,
-                          child: Text(suggestion.description)
+                          color: Colors.grey,
+                          child: Text(suggestion.description,
+                                  style:const TextStyle(color:Colors.blueGrey)
+                                  )
                         );
                       },
-                      inputDecoration: const InputDecoration(
+                      clearButton: const Icon(Icons.close),
+                      componentCountry: 'us',
+                      language: 'en-Us',
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.all(8),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white)),
                         hintText:
-                            "Zipcode",
-                        errorText: null),
-                      clearButton: const Icon(Icons.close),
-                      componentCountry: 'us',
-                      language: 'en-Us'
+                            'Enter Zipcode to lookup',
+                        //errorText: 'Zip code must be 5 digits max',
+                        //errorStyle: TextStyle(color:Colors.red),
+                        ),
+
                     ),
                   ),
 
 
-                  /******** */
-                  // Address lookup
+                  // Address lookup TextField example
                   const Text('Example of address lookup:'),
                   SizedBox(
                     height: 40,
-                    child: MapsPlacesAutocomplete(
+                    child: MapsPlacesAutocompleteTextField(
 
                       // create a `privatekeys.dart` file and add your API key there 
                       //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
@@ -199,64 +223,346 @@ class _MyHomePageState extends State<MyHomePage> {
                       onSuggestionClickGetTextToUseForControl: onSuggestionClickGetTextToUseForControl,
                       onInitialSuggestionClick: onInitialSuggestionClick,
                       onSuggestionClick: onSuggestionClick,
+                      hoverColor: Colors.purple,  // for desktop platforms with mouse
+                      selectionColor: Colors.red, // for desktop platforms with mouse
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
-                          margin: const EdgeInsets.fromLTRB(2, 2, 2, 0),
+                          margin: const EdgeInsets.fromLTRB(1, 1, 1, 1), //<<This area will get hoverColor/selectionColor on desktop
                           padding: const EdgeInsets.all(8),
                           alignment: Alignment.centerLeft,
                           color: Colors.white,
                           child: Text(suggestion.description)
                         );
                       },
-                      inputDecoration: const InputDecoration(
+                      clearButton: const Icon(Icons.close),
+                      componentCountry: 'us',
+                      language: 'en-Us',
+                      decoration: const InputDecoration(
                         contentPadding: EdgeInsets.all(8),
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white)),
                         hintText:
                             "Address",
                         errorText: null),
-                      clearButton: const Icon(Icons.close),
-                      componentCountry: 'us',
-                      language: 'en-Us'
                     ),
                   ),
-                  /******** */
+                  /*********/
         
         
                   /******** */
                   // Use the details from callback
                   Container(
                     padding: const EdgeInsets.all(8),
-                    child: Column(
+                    child: 
+                      DefaultTextStyle.merge(
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                        ),
+                    child:Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                      Text('Suggestion PlaceId: ${_suggestionPlaceId?? '---'}'),
-                      Text('Suggestion Description: ${_suggestionDescription?? '---'}'),
-                      Text('Name: ${_name?? '---'}'),
-                      Text('FormattedAddress: ${_formattedAddress?? '---'}'),
-                      Text('FormattedAddressZipPlus4: ${_formattedAddressZipPlus4?? '---'}'),
-                      Text('StreetAddress: ${_streetAddress?? '---'}'),
-                      Text('StreetNumber: ${_streetNumber ?? '---'}'),
-                      Text('Street: ${_street ?? '---'}'),
-                      Text('StreetShort: ${_streetShort ?? '---'}'),
-                      Text('Vicinity: ${_vicinity ?? '---'}'),
-                      Text('City: ${_city ?? '---'}'),
-                      Text('County: ${_county ?? '---'}'),
-                      Text('State: ${_state ?? '---'}'),
-                      Text('StateShort: ${_stateShort ?? '---'}'),
-                      Text('Country: ${_country ?? '---'}'),
-                      Text('ZipCode: ${_zipCode ?? '---'}'),
-                      Text('ZipCodeSuffix: ${_zipCodeSuffix ?? '---'}'),
-                      Text('ZipCodePlus4: ${_zipCodePlus4 ?? '---'}'),
-                      Text('Latitude: ${_lat ?? '---'}'),
-                      Text('Longitude: ${_lng ?? '---'}'),
-                    ]),
+                        Text('Suggestion PlaceId: ${_suggestionPlaceId?? '---'}'),
+                        Text('Suggestion Description: ${_suggestionDescription?? '---'}'),
+                        Text('Name: ${_name?? '---'}'),
+                        Text('FormattedAddress: ${_formattedAddress?? '---'}'),
+                        Text('FormattedAddressZipPlus4: ${_formattedAddressZipPlus4?? '---'}'),
+                        Text('StreetAddress: ${_streetAddress?? '---'}'),
+                        Text('StreetNumber: ${_streetNumber ?? '---'}'),
+                        Text('Street: ${_street ?? '---'}'),
+                        Text('StreetShort: ${_streetShort ?? '---'}'),
+                        Text('Vicinity: ${_vicinity ?? '---'}'),
+                        Text('City: ${_city ?? '---'}'),
+                        Text('County: ${_county ?? '---'}'),
+                        Text('State: ${_state ?? '---'}'),
+                        Text('StateShort: ${_stateShort ?? '---'}'),
+                        Text('Country: ${_country ?? '---'}'),
+                        Text('ZipCode: ${_zipCode ?? '---'}'),
+                        Text('ZipCodeSuffix: ${_zipCodeSuffix ?? '---'}'),
+                        Text('ZipCodePlus4: ${_zipCodePlus4 ?? '---'}'),
+                        Text('Latitude: ${_lat ?? '---'}'),
+                        Text('Longitude: ${_lng ?? '---'}'),
+                      ]),
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-        ));
+        );
+  }
+}
+
+
+class TextFormFieldExample extends StatefulWidget {
+  const TextFormFieldExample({super.key});
+
+  @override
+  State<TextFormFieldExample> createState() => _TextFormFieldExampleState();
+}
+
+class _TextFormFieldExampleState extends State<TextFormFieldExample> {
+  final _formKey = GlobalKey<FormState>();
+  late FocusNode addressFocusNode;
+  late FocusNode cityFocusNode;
+  late FocusNode stateFocusNode;
+  late FocusNode zipFocusNode;
+
+  late TextEditingController addressTextController;
+  late TextEditingController cityTextController;
+  late TextEditingController stateTextController;
+  late TextEditingController zipTextController;
+
+  @override
+  void initState() {
+    debugPrint('_LocationInformationPageState() init()');
+
+    super.initState();
+
+    addressFocusNode = FocusNode();
+    cityFocusNode = FocusNode();
+    stateFocusNode = FocusNode();
+    zipFocusNode = FocusNode();
+
+    addressTextController = TextEditingController();
+    cityTextController = TextEditingController();
+    stateTextController = TextEditingController();
+    zipTextController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    addressFocusNode.dispose();
+    cityFocusNode.dispose();
+    stateFocusNode.dispose();
+    zipFocusNode.dispose();
+
+    addressTextController.dispose();
+    cityTextController.dispose();
+    stateTextController.dispose();
+    zipTextController.dispose();
+    
+    super.dispose();
+  }
+
+
+ // This callback returns what we want to be put into the text control
+  // when they choose an address
+  String? onSuggestionClickGetTextToUseForControl(Place placeDetails) {
+    String? forOurAddressBox = placeDetails.streetAddress;
+    if(forOurAddressBox==null || forOurAddressBox.isEmpty) {
+      forOurAddressBox = placeDetails.streetNumber ?? '';
+      forOurAddressBox += (forOurAddressBox.isNotEmpty ? ' ' : '');
+      forOurAddressBox += placeDetails.streetShort ?? '';
+    }
+    return forOurAddressBox;
+  }
+
+  /// This method really does not seem to help...
+  String prepareQuery(String baseAddressQuery) {
+    debugPrint('prepareQuery() baseAddressQuery=$baseAddressQuery');
+    String built = baseAddressQuery;
+    String city = cityTextController.text;
+    String state = stateTextController.text;
+    String zip = zipTextController.text;
+    if(city.isNotEmpty) {
+      built += ', $city';
+    }
+    if(state.isNotEmpty) {
+      built += ', $state';
+    }
+    if(zip.isNotEmpty) {
+      built += ' $zip';
+    }
+    built += ', USA';
+    debugPrint('prepareQuery made built="$built"');
+    return built;
+  }
+
+  void onClearClick() {
+    debugPrint('onClearClickInAddressAutocomplete() clearing form');
+    addressTextController.clear();
+    cityTextController.clear();
+    stateTextController.clear();
+    zipTextController.clear();
+
+    if(!addressFocusNode.hasFocus) {
+      // if address does not have focus unfocus everything to close keyboard
+      // and show the cleared form.
+      FocusScopeNode currentFocus = FocusScope.of(context);
+      currentFocus.unfocus();
+    }
+ }
+
+  // This gets us an IMMEDIATE form fill but address has no abbreviations
+  // and we must wait for the zipcode.
+  void onInitialSuggestionClick(Suggestion suggestion) {
+    final description = suggestion.description;
+
+    debugPrint('onInitialSuggestionClick()  description=$description');
+    debugPrint('  suggestion = $suggestion');
+    /* COULD BE USED TO SHOW IMMEDIATE values in form
+       BEFORE PlaceDetails arrive from API
+
+    var parts = description.split(',');
+
+    if(parts.length<4) {
+      parts = [ '','','','' ];
+    }
+    addressTextController.text = parts[0];
+    cityTextController.text = parts[1];
+    stateTextController.text = parts[2].trim();
+    zipTextController.clear(); // we wont have zip until details come thru
+    */
+ }
+
+  // write a function to receive the place details callback
+  void onSuggestionClick(Place placeDetails) {
+    debugPrint('onSuggestionClick() placeDetails:$placeDetails');
+
+    cityTextController.text = placeDetails.city ?? '';
+    stateTextController.text = placeDetails.state ?? '';
+    zipTextController.text = placeDetails.zipCode ?? '';
+  }
+
+  InputDecoration getInputDecoration(String hintText) {
+    return InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: hintText,
+                hintStyle: const TextStyle(color:Colors.grey),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: const BorderSide(
+                    color: Colors.purple,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: const BorderSide(
+                    color: Colors.black12,
+                    width: 1.0,
+                  ),
+                ),
+              );
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return
+    SingleChildScrollView(
+      child: Center(
+      child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Form(
+      key: _formKey,
+      child: Column(
+      children: <Widget>[
+        const LeftAlignedSimpleRow('Address'),
+        MapsPlacesAutocompleteTextFormField(
+              // following args specific to MapsPlacesAutocompleteTextFormField()
+              mapsApiKey: GOOGLE_MAPS_ACCOUNT_API_KEY,
+              debounceTime: 200,
+              //In practice this does not seem to help United States address//prepareQuery: prepareQuery,
+              onClearClick: onClearClick,
+              onSuggestionClickGetTextToUseForControl: onSuggestionClickGetTextToUseForControl,
+              onInitialSuggestionClick: onInitialSuggestionClick,
+              onSuggestionClick: onSuggestionClick,
+              hoverColor: Colors.purple,  // for desktop platforms with mouse
+              selectionColor: Colors.red, // for desktop platforms with mouse
+              buildItem: (Suggestion suggestion, int index) {
+                return Container(
+                  margin: const EdgeInsets.fromLTRB(2, 2, 2, 2), //<<This area will get hoverColor/selectionColor on desktop
+                  padding: const EdgeInsets.all(8),
+                  alignment: Alignment.centerLeft,
+                  color: Colors.white,
+                  child: Text(suggestion.description, style:const TextStyle(fontSize:14, fontWeight:FontWeight.bold))
+                );
+              },
+              clearButton: const Icon(Icons.close),
+              componentCountry: 'us',
+              language: 'en-Us',
+
+              // 'normal' TextFormField arguments:
+              autofocus: true,
+              scrollPadding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              autovalidateMode: AutovalidateMode.disabled,
+              keyboardType: TextInputType.streetAddress,
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.next,
+              onEditingComplete: () {
+                debugPrint('onEditingComplete() for TextFormField');
+              },
+              onChanged: (newText) {
+                debugPrint('onChanged() for TextFormField got "$newText"');
+              },
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              decoration: getInputDecoration('Start typing address for Autocomplete..'),
+            ),
+      const LeftAlignedSimpleRow('City'),
+      TextFormField(
+        controller: cityTextController,
+        focusNode: cityFocusNode,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        decoration: getInputDecoration('New York'),
+        validator: (value) {
+          // validation logic
+          return null;
+        },
+      ),
+      const LeftAlignedSimpleRow('State'),
+      TextFormField(
+        controller: stateTextController,
+        focusNode: stateFocusNode,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        decoration: getInputDecoration('NY'),
+        validator: (value) {
+          // validation logic
+          return null;
+        },
+      ),
+      const LeftAlignedSimpleRow('Zip'),
+      TextFormField(
+        controller: zipTextController,
+        focusNode: zipFocusNode,
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        decoration: getInputDecoration('10001'),
+        validator: (value) {
+          // validation logic
+          return null;
+        },
+      ),
+      ],
+      ),
+    ),),),);
+  }
+
+ 
+}
+
+
+
+class LeftAlignedSimpleRow extends StatelessWidget {
+  final String label;
+  final double fontSize;
+  final FontWeight fontWeight;
+
+  const LeftAlignedSimpleRow(this.label,
+      {this.fontSize = 16.0, this.fontWeight = FontWeight.normal, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          label,
+          style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+        ),
+      ],
+    );
   }
 }

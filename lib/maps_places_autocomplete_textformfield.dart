@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maps_places_autocomplete/maps_places_autocomplete_generic.dart';
 import 'package:maps_places_autocomplete/model/place.dart';
 import 'package:maps_places_autocomplete/service/address_service.dart';
 import 'package:uuid/uuid.dart';
@@ -16,61 +17,88 @@ export 'package:maps_places_autocomplete/model/suggestion.dart';
 typedef ReportValidationFailureAndRequestFocusCallback = bool Function(
     String errorMessageForThisFailedValidation);
 
-class MapsPlacesAutocompleteTextFormField extends StatefulWidget {
+
+class MapsPlacesAutocompleteTextFormField extends MapsPlacesAutocompleteStatefulWidget {
+  @override
+  /// Callback triggered before sending query to google places API.
   /// This allows the caller to prepare the query, modifying it in any way.  It might be
   /// used for adding things like City, State, Zip that may be already entered in other
   /// form elements.
   final String Function(String address)? prepareQuery;
 
-  ///called when user clicks clear icon.  This can be useful if the caller wants to clear other
+  @override
+  ///Callback triggered when user clicks clear icon.  This can be useful if the caller wants to clear other
   /// address fields that may be in their form.
   final void Function()? onClearClick;
 
-  ///callback triggered when a address item is selected, allows chance to 
+  @override
+  ///Callback triggered when a address item is selected, allows chance to 
   /// clear other fields awaiting [Place] details in [onSuggestionClick]
   /// or to use the [Suggestion] information directly.
   final void Function(Suggestion suggestion)? onInitialSuggestionClick;
 
-  ///callback triggered when after Place has been retreived after item is selected
+  @override
+  ///Callback triggered when after Place has been retreived after item is selected
   final void Function(Place place)? onSuggestionClick;
 
-  ///callback triggered when a item is selected
+  @override
+  ///Callback triggered when a item is selected
   final String? Function(Place place)? onSuggestionClickGetTextToUseForControl;
 
+  @override
   ///your maps api key, must not be null
   final String mapsApiKey;
 
+  @override
   ///builder used to render each item displayed
   ///must not be null
   final Widget Function(Suggestion, int) buildItem;
 
+  @override
+  ///Hover color around [buildItem] widget on desktop platforms.
+  final Color? hoverColor;
+
+  @override
+  ///Selection color around [buildItem] widget on desktop platforms.
+  final Color? selectionColor;
+
+  @override
   ///builder used to render a clear, it can be null, but in that case, a clear button is not displayed
   final Icon? clearButton;
 
+  @override
   ///BoxDecoration for the suggestions external container
-  final BoxDecoration? containerDecoration;
+  final BoxDecoration? suggestionsOverlayDecoration;
 
+  @override
   ///Elevation for the suggestion list
   final double? elevation;
 
+  @override
   ///Offset between the TextField and the Overlay
   final double overlayOffset;
 
+  @override
   ///if true, shows "powered by google" inside the suggestion list, after its items
   final bool showGoogleTradeMark;
 
+  @override
   ///used to narrow down address search
   final String? componentCountry;
 
-  ///in witch language the results are being returned
+  @override
+  ///Inform Google places of desired language the results should be returned.
   final String? language;
 
+  @override
   ///PostalCode lookup instead of address lookup (defaults to false)
   final bool postalCodeLookup;
 
+  @override
   ///debounce time in milliseconds (default 600)
   final int debounceTime;
 
+  @override
   final TextEditingController? controller;
 
   final bool requiredField;
@@ -81,32 +109,70 @@ class MapsPlacesAutocompleteTextFormField extends StatefulWidget {
       reportValidationFailAndRequestFocus;
 
   // These correspond to arguments supported by standard Flutter TextFormField
+  @override
   final String? initialValue;
+  
+  @override
   final FocusNode? focusNode;
+
+  @override
   final InputDecoration? decoration;
+
+  @override
   final TextInputType? keyboardType;
+
+  @override
   final TextCapitalization textCapitalization;
+
+  @override
   final TextInputAction? textInputAction;
+
+  @override
   final TextStyle? style;
+
+  @override
   final StrutStyle? strutStyle;
+
+  @override
   final TextDirection? textDirection;
+
+  @override
   final TextAlign textAlign;
+
+  @override
   final TextAlignVertical? textAlignVertical;
+
+  @override
   final bool autofocus;
+
+  @override
   final bool readOnly;
+
+  @override
   final bool? showCursor;
-  final String obscuringCharacter;
-  final bool obscureText;
-  final bool autocorrect;
+
   final SmartDashesType? smartDashesType;
   final SmartQuotesType? smartQuotesType;
   final bool enableSuggestions;
+
+  @override
   final MaxLengthEnforcement? maxLengthEnforcement;
+
+  @override
   final int? maxLines;
+
+  @override
   final int? minLines;
+
+  @override
   final bool expands;
+
+  @override
   final int? maxLength;
+
+  @override
   final ValueChanged<String>? onChanged;
+
   final GestureTapCallback? onTap;
   final TapRegionCallback? onTapOutside;
   final VoidCallback? onEditingComplete;
@@ -137,7 +203,8 @@ class MapsPlacesAutocompleteTextFormField extends StatefulWidget {
   }
 
   const MapsPlacesAutocompleteTextFormField(
-      {Key? key,
+      {
+      super.key,
       this.controller,
       this.requiredField = false,
       this.validator = defaultValidator,
@@ -151,8 +218,10 @@ class MapsPlacesAutocompleteTextFormField extends StatefulWidget {
       this.onSuggestionClickGetTextToUseForControl,
       required this.mapsApiKey,
       required this.buildItem,
+      this.hoverColor,
+      this.selectionColor,
       this.clearButton,
-      this.containerDecoration,
+      this.suggestionsOverlayDecoration,
       this.elevation,
       this.overlayOffset = 4,
       this.showGoogleTradeMark = false,
@@ -175,9 +244,6 @@ class MapsPlacesAutocompleteTextFormField extends StatefulWidget {
       this.autofocus = false,
       this.readOnly = false,
       this.showCursor,
-      this.obscuringCharacter = '•',
-      this.obscureText = false,
-      this.autocorrect = true,
       this.smartDashesType,
       this.smartQuotesType,
       this.enableSuggestions = true,
@@ -209,47 +275,57 @@ class MapsPlacesAutocompleteTextFormField extends StatefulWidget {
       this.enableIMEPersonalizedLearning = true,
       this.mouseCursor,
       this.contextMenuBuilder,
-      
-      })
-      : super(key: key);
+      });
 
   @override
   State<StatefulWidget> createState() => _MapsPlacesAutocompleteTextFormField();
 }
 
-class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteTextFormField> {
-  final layerLink = LayerLink();
+class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteTextFormField>
+        with SuggestionOverlayMixin
+        implements OverlaySuggestionDetails {
+  @override
+  final LayerLink layerLink = LayerLink();
+  @override
   final String sessionToken = const Uuid().v4();
 
   // [_controller] is not final because it is possible that the dispose() can happen
   //  if caller does setState(), so we must be able to set it to null after dispose so that any
   //  of our pending callbacks can detect if it has been disposed and not use it.
-  TextEditingController? _controller;
-  late final FocusNode _focusNode;
-  late AddressService _addressService;
+  @override
+  TextEditingController? controller;
+  @override
+  late final FocusNode focusNode;
+  @override
+  late AddressService addressService;
+  @override
   OverlayEntry? entry;
-  List<Suggestion> _suggestions = [];
-  Timer? _debounceTimer;
+  @override
+  List<Suggestion> suggestions = [];
+  @override
+  Timer? debounceTimer;
 
+/*
   void showOrHideOverlayOnFocusChange () {
-    if (_focusNode.hasFocus) {
+    if (focusNode.hasFocus) {
       showOverlay();
     } else {
       hideOverlay();
     }
   }
-
+*/
+/*
   @override
   void initState() {
      debugPrint('_MapsPlacesAutocompleteTextFormField() init() called!!!!');
     super.initState();
-    _controller = widget.controller ?? TextEditingController(text:widget.initialValue);
-    _focusNode = widget.focusNode ?? FocusNode();
+    controller = widget.controller ?? TextEditingController(text:widget.initialValue);
+    focusNode = widget.focusNode ?? FocusNode();
 
-    _addressService = AddressService(sessionToken, widget.mapsApiKey,
+    addressService = AddressService(sessionToken, widget.mapsApiKey,
         widget.componentCountry, widget.language);
 
-    _focusNode.addListener(showOrHideOverlayOnFocusChange);
+    focusNode.addListener(showOrHideOverlayOnFocusChange);
   }
 
   @override
@@ -257,20 +333,20 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
     debugPrint('_MapsPlacesAutocompleteTextFormField() dispose() called!!!!');
     
     if(widget.controller==null) {
-      _controller!.dispose(); // only dispose if we created it
-      _controller = null;
+      controller!.dispose(); // only dispose if we created it
+      controller = null;
     }
     if(widget.focusNode==null) {
-      _focusNode.dispose(); // only dispose if we created it
+      focusNode.dispose(); // only dispose if we created it
     } else {
       // remove the listener so it's doesn't get stale, we will put it back later
-      _focusNode.removeListener(showOrHideOverlayOnFocusChange);
+      focusNode.removeListener(showOrHideOverlayOnFocusChange);
     }
 
-    _debounceTimer?.cancel();
+    debounceTimer?.cancel();
     super.dispose();
   }
-
+*/
   void weHaveValidationErrorRequestFocusIfAvailable( String validationErrorMsg ) {
     // If there is an error for this input then request focus here
     // so form scrolls to show this
@@ -283,7 +359,7 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
           widget.reportValidationFailAndRequestFocus!.call(validationErrorMsg);
     }
     if (!focusRequestedAlready) {
-      _focusNode.requestFocus();
+      focusNode.requestFocus();
     }
   }
 
@@ -306,7 +382,7 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
       return null;
     }
   }
-
+/*
   void showOverlay() {
     if(context.mounted) {
       if (context.findRenderObject() != null) {
@@ -337,21 +413,66 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
       if(widget.onClearClick!=null) {
         widget.onClearClick!();
       }
-      _controller?.clear();
-      _focusNode.unfocus();
-      _suggestions = [];
+      controller?.clear();
+      focusNode.unfocus();
+      suggestions = [];
     });
+  }
+*/
+
+/* ALTERNATE using ListView builder.. */
+
+/* FUCK
+ Widget get _overlayChild {
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      itemCount: suggestions.length,
+      itemBuilder: (BuildContext context, int index) => InkWell(
+        hoverColor: widget.hoverColor,
+        highlightColor: widget.selectionColor,
+        onTap: () async {
+          debugPrint('onTap on a suggestion');
+          if (index < suggestions.length) {
+            final s = suggestions[index];
+            hideOverlay();
+            focusNode.unfocus();
+            if (widget.onInitialSuggestionClick != null) {
+              widget.onInitialSuggestionClick!(s);
+            }
+            if (widget.onSuggestionClickGetTextToUseForControl != null ||
+                widget.onSuggestionClick != null) {
+              // If they need more details now do async request
+              // for Place details..
+              Place place = await addressService.getPlaceDetail(s.placeId);
+              if (widget.onSuggestionClickGetTextToUseForControl != null) {
+                controller?.text =
+                    widget.onSuggestionClickGetTextToUseForControl!(place) ?? '';
+              } else {
+                // default to full formatted address
+                controller?.text = place.formattedAddress ?? '';
+              }
+              if (widget.onSuggestionClick != null) {
+                widget.onSuggestionClick!(place);
+              }
+            }
+          }
+        },
+        child: widget.buildItem(suggestions[index], index),
+        ),
+      );
   }
 
   List<Widget> buildList() {
     List<Widget> list = [];
-    for (int i = 0; i < _suggestions.length; i++) {
-      Suggestion s = _suggestions[i];
+    for (int i = 0; i < suggestions.length; i++) {
+      Suggestion s = suggestions[i];
       Widget w = InkWell(
         child: widget.buildItem(s, i),
         onTap: () async {
+          debugPrint('onTap on a suggestion');
           hideOverlay();
-          _focusNode.unfocus();
+          focusNode.unfocus();
           if (widget.onInitialSuggestionClick != null) {
             widget.onInitialSuggestionClick!(s);
           }
@@ -359,13 +480,13 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
               widget.onSuggestionClick != null) {
             // If they need more details now do async request
             // for Place details..
-            Place place = await _addressService.getPlaceDetail(s.placeId);
+            Place place = await addressService.getPlaceDetail(s.placeId);
             if (widget.onSuggestionClickGetTextToUseForControl != null) {
-              _controller?.text =
+              controller?.text =
                   widget.onSuggestionClickGetTextToUseForControl!(place) ?? '';
             } else {
               // default to full formatted address
-              _controller?.text = place.formattedAddress ?? '';
+              controller?.text = place.formattedAddress ?? '';
             }
             if (widget.onSuggestionClick != null) {
               widget.onSuggestionClick!(place);
@@ -378,33 +499,36 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
     return list;
   }
 
-  Widget buildOverlay() => Material(
-      color: widget.containerDecoration != null
-          ? Colors.transparent
-          : Colors.white,
-      elevation: widget.elevation ?? 0,
-      child: Container(
-        decoration: widget.containerDecoration ?? const BoxDecoration(),
-        child: Column(
-          children: [
-            ...buildList(),
-            if (widget.showGoogleTradeMark)
-              const Padding(
-                padding: EdgeInsets.all(4.0),
-                child: Text("powered by google"),
-              )
-          ],
-        ),
-      ));
+  Widget buildOverlay() => TextFieldTapRegion(
+        child:Material(
+        color: widget.suggestionsOverlayDecoration != null
+            ? Colors.transparent
+            : Colors.white,
+        elevation: widget.elevation ?? 0,
+        child: Container(
+          decoration: widget.suggestionsOverlayDecoration ?? const BoxDecoration(),
+          child: Column(
+            children: [
+              _overlayChild,//...buildList(),
+              if (widget.showGoogleTradeMark)
+                const Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Text('powered by google'),
+                )
+            ],
+          ),
+        )
+      )
+    );
 
-  String _lastText = "";
+  String _lastText = '';
   Future<void> searchAddress(String text) async {
     if(widget.prepareQuery!=null) {
       text = widget.prepareQuery!(text);
     }
-    if (text != _lastText && text != "") {
+    if (text != _lastText && text.isNotEmpty) {
       _lastText = text;
-      _suggestions = await _addressService.search(text,
+      suggestions = await addressService.search(text,
           includeFullSuggestionDetails: (widget.onInitialSuggestionClick != null),
           postalCodeLookup: widget.postalCodeLookup);
     }
@@ -428,15 +552,15 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
   }
 
   void onTextChanges(text) async {
-    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
-    _debounceTimer = Timer(Duration(milliseconds: widget.debounceTime), () async {
+    if (debounceTimer?.isActive ?? false) debounceTimer!.cancel();
+    debounceTimer = Timer(Duration(milliseconds: widget.debounceTime), () async {
       await searchAddress(text);
       if(widget.onChanged!=null) {
         widget.onChanged!(text);
       }
     });
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
@@ -444,8 +568,8 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
       child: Stack(
         children: [
           TextFormField(
-              focusNode: _focusNode,
-              controller: _controller,
+              focusNode: focusNode,
+              controller: controller,
               onChanged: onTextChanges,
               decoration: getInputDecoration(),
 
@@ -466,9 +590,6 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
               autofocus: widget.autofocus,
               readOnly: widget.readOnly,
               showCursor: widget.showCursor,
-              obscuringCharacter: widget.obscuringCharacter,
-              obscureText: widget.obscureText,
-              autocorrect: widget.autocorrect,
               smartDashesType: widget.smartDashesType,
               smartQuotesType: widget.smartQuotesType,
               enableSuggestions: widget.enableSuggestions,
@@ -504,3 +625,4 @@ class _MapsPlacesAutocompleteTextFormField extends State<MapsPlacesAutocompleteT
     );
   }
 }
+
