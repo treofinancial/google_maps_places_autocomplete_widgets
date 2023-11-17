@@ -1,15 +1,16 @@
-library maps_places_autocomplete;
+library google_maps_places_autocomplete_widgets;
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'model/suggestion.dart';
-import 'model/place.dart';
-import 'service/address_service.dart';
 
-abstract class MapsPlacesAutocompleteStatefulWidget extends StatefulWidget {
-  const MapsPlacesAutocompleteStatefulWidget({super.key});
+import '/model/suggestion.dart';
+import '/model/place.dart';
+import '/service/address_service.dart';
+
+abstract class AddresssAutocompleteStatefulWidget extends StatefulWidget {
+  const AddresssAutocompleteStatefulWidget({super.key});
 
   /// Callback triggered before sending query to google places API.
   /// This allows the caller to prepare the query, modifying it in any way.  It might be
@@ -21,7 +22,7 @@ abstract class MapsPlacesAutocompleteStatefulWidget extends StatefulWidget {
   /// address fields that may be in their form.
   abstract final void Function()? onClearClick;
 
-  ///Callback triggered when a address item is selected, allows chance to 
+  ///Callback triggered when a address item is selected, allows chance to
   /// clear other fields awaiting [Place] details in [onSuggestionClick]
   /// or to use the [Suggestion] information directly.
   abstract final void Function(Suggestion suggestion)? onInitialSuggestionClick;
@@ -30,14 +31,15 @@ abstract class MapsPlacesAutocompleteStatefulWidget extends StatefulWidget {
   abstract final void Function(Place place)? onSuggestionClick;
 
   ///Callback triggered when a item is selected
-  abstract final String? Function(Place place)? onSuggestionClickGetTextToUseForControl;
+  abstract final String? Function(Place place)?
+      onSuggestionClickGetTextToUseForControl;
 
   ///your maps api key, must not be null
   abstract final String mapsApiKey;
 
   ///builder used to render each item displayed
   ///must not be null
-  abstract final Widget Function(Suggestion, int) buildItem;
+  abstract final Widget Function(Suggestion, int)? buildItem;
 
   ///Hover color around [buildItem] widget on desktop platforms.
   abstract final Color? hoverColor;
@@ -74,7 +76,7 @@ abstract class MapsPlacesAutocompleteStatefulWidget extends StatefulWidget {
 
   abstract final TextEditingController? controller;
 
-  // These correspond to arguments supported by standard Flutter 
+  // These correspond to arguments supported by standard Flutter
   // TextField and TextFormField
   abstract final String? initialValue;
   abstract final FocusNode? focusNode;
@@ -97,9 +99,7 @@ abstract class MapsPlacesAutocompleteStatefulWidget extends StatefulWidget {
   abstract final bool expands;
   abstract final int? maxLength;
   abstract final ValueChanged<String>? onChanged;
- 
 }
-
 
 abstract class OverlaySuggestionDetails {
   abstract final LayerLink layerLink;
@@ -112,14 +112,14 @@ abstract class OverlaySuggestionDetails {
   abstract Timer? debounceTimer;
 }
 
-mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on State<T> implements OverlaySuggestionDetails {
-
-
+mixin SuggestionOverlayMixin<T extends AddresssAutocompleteStatefulWidget>
+    on State<T> implements OverlaySuggestionDetails {
   @override
   void initState() {
-     debugPrint('SuggestionOverlayMixin init() called!!!!');
+    debugPrint('SuggestionOverlayMixin init() called!!!!');
     super.initState();
-    controller = widget.controller ?? TextEditingController(text:widget.initialValue);
+    controller =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
     focusNode = widget.focusNode ?? FocusNode();
 
     addressService = AddressService(sessionToken, widget.mapsApiKey,
@@ -131,12 +131,12 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
   @override
   void dispose() {
     debugPrint('SuggestionOverlayMixin dispose() called!!!!');
-    
-    if(widget.controller==null) {
+
+    if (widget.controller == null) {
       controller!.dispose(); // only dispose if we created it
       controller = null;
     }
-    if(widget.focusNode==null) {
+    if (widget.focusNode == null) {
       focusNode.dispose(); // only dispose if we created it
     } else {
       // remove the listener so it's doesn't get stale, we will put it back later
@@ -147,8 +147,7 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
     super.dispose();
   }
 
-
-   void showOrHideOverlayOnFocusChange () {
+  void showOrHideOverlayOnFocusChange() {
     if (focusNode.hasFocus) {
       showOverlay();
     } else {
@@ -157,7 +156,7 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
   }
 
   void showOverlay() {
-    if(context.mounted) {
+    if (context.mounted) {
       if (context.findRenderObject() != null) {
         final overlay = Overlay.of(context);
         final RenderBox renderBox = context.findRenderObject() as RenderBox;
@@ -183,7 +182,7 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
 
   void _clearText() {
     setState(() {
-      if(widget.onClearClick!=null) {
+      if (widget.onClearClick != null) {
         widget.onClearClick!();
       }
       controller?.clear();
@@ -192,8 +191,8 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
     });
   }
 
-/* ALTERNATE using ListView builder.. */
- Widget get _overlayChild {
+  /* ALTERNATE using ListView builder.. */
+  Widget get buildListViewerBuilder {
     return ListView.builder(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
@@ -216,7 +215,8 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
               Place place = await addressService.getPlaceDetail(s.placeId);
               if (widget.onSuggestionClickGetTextToUseForControl != null) {
                 controller?.text =
-                    widget.onSuggestionClickGetTextToUseForControl!(place) ?? '';
+                    widget.onSuggestionClickGetTextToUseForControl!(place) ??
+                        '';
               } else {
                 // default to full formatted address
                 controller?.text = place.formattedAddress ?? '';
@@ -227,12 +227,15 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
             }
           }
         },
-        child: widget.buildItem(suggestions[index], index),
-        ),
-      );
+        child: widget.buildItem != null
+            ? widget.buildItem!(suggestions[index], index)
+            : defaultItemBuilder(suggestions[index], index),
+      ),
+    );
   }
 
-  List<Widget> buildList() {
+  /* OLD mechanism
+  List<Widget> buildListAsRows() {
     List<Widget> list = [];
     for (int i = 0; i < suggestions.length; i++) {
       Suggestion s = suggestions[i];
@@ -267,41 +270,42 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
     }
     return list;
   }
+  old mechanism */
 
   Widget buildOverlay() => TextFieldTapRegion(
-        child:Material(
-        color: widget.suggestionsOverlayDecoration != null
-            ? Colors.transparent
-            : Colors.white,
-        elevation: widget.elevation ?? 0,
-        child: Container(
-          decoration: widget.suggestionsOverlayDecoration ?? const BoxDecoration(),
-          child: Column(
-            children: [
-              _overlayChild,//...buildList(),
-              if (widget.showGoogleTradeMark)
-                const Padding(
-                  padding: EdgeInsets.all(4.0),
-                  child: Text('powered by google'),
-                )
-            ],
-          ),
-        )
-      )
-    );
+      child: Material(
+          color: widget.suggestionsOverlayDecoration != null
+              ? Colors.transparent
+              : Colors.white,
+          elevation: widget.elevation ?? 0,
+          child: Container(
+            decoration:
+                widget.suggestionsOverlayDecoration ?? const BoxDecoration(),
+            child: Column(
+              children: [
+                buildListViewerBuilder, //...buildList(),
+                if (widget.showGoogleTradeMark)
+                  const Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text('powered by google'),
+                  )
+              ],
+            ),
+          )));
 
   String _lastText = '';
   Future<void> searchAddress(String text) async {
-    if(widget.prepareQuery!=null) {
+    if (widget.prepareQuery != null) {
       text = widget.prepareQuery!(text);
     }
     if (text != _lastText && text.isNotEmpty) {
       _lastText = text;
       suggestions = await addressService.search(text,
-          includeFullSuggestionDetails: (widget.onInitialSuggestionClick != null),
+          includeFullSuggestionDetails:
+              (widget.onInitialSuggestionClick != null),
           postalCodeLookup: widget.postalCodeLookup);
     }
-    if(entry!=null) {
+    if (entry != null) {
       entry!.markNeedsBuild();
     }
   }
@@ -322,11 +326,22 @@ mixin SuggestionOverlayMixin<T extends MapsPlacesAutocompleteStatefulWidget> on 
 
   void onTextChanges(text) async {
     if (debounceTimer?.isActive ?? false) debounceTimer!.cancel();
-    debounceTimer = Timer(Duration(milliseconds: widget.debounceTime), () async {
+    debounceTimer =
+        Timer(Duration(milliseconds: widget.debounceTime), () async {
       await searchAddress(text);
-      if(widget.onChanged!=null) {
+      if (widget.onChanged != null) {
         widget.onChanged!(text);
       }
     });
+  }
+
+  /// Provides default implementation of Suggestion list item builder
+  Widget defaultItemBuilder(Suggestion suggestion, int index) {
+    return Container(
+        margin: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+        padding: const EdgeInsets.all(8),
+        alignment: Alignment.centerLeft,
+        color: Colors.white,
+        child: Text(suggestion.description));
   }
 }

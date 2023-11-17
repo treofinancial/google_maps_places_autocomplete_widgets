@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:maps_places_autocomplete/model/place.dart';
-import 'package:maps_places_autocomplete/model/suggestion.dart';
+
+import '/model/place.dart';
+import '/model/suggestion.dart';
 
 /* FOR DEBUGGING */
 void printWrapped(String text) {
@@ -97,13 +98,12 @@ result["predictions"] =
 ]
 */
   ///[includeFullSuggestionDetails] if we should include ALL details that are returned in API suggestions.
-  ///   (This is sent as true when the `onInitialSuggestionClick` is in use) 
+  ///   (This is sent as true when the `onInitialSuggestionClick` is in use)
   ///[postalCodeLookup] if we should request `postal_code` type return information
   ///   instead of address type information.
   Future<List<Suggestion>> fetchSuggestions(String input,
-      {
-        bool includeFullSuggestionDetails = false,
-        bool postalCodeLookup = false}) async {
+      {bool includeFullSuggestionDetails = false,
+      bool postalCodeLookup = false}) async {
     final Map<String, dynamic> parameters = <String, dynamic>{
       'input': input,
       'types': postalCodeLookup
@@ -140,8 +140,8 @@ result["predictions"] =
 
         // compose suggestions in a list
         return result['predictions'].map<Suggestion>((p) {
-          if(includeFullSuggestionDetails) {
-            // Package everything useful from API json 
+          if (includeFullSuggestionDetails) {
+            // Package everything useful from API json
             final mainText = p['structured_formatting']?['main_text'];
             final secondaryText = p['structured_formatting']?['secondary_text'];
             final terms = p['terms']
@@ -150,11 +150,11 @@ result["predictions"] =
             final types =
                 p['types'].map<String>((atype) => atype as String).toList();
 
-            return Suggestion(p['place_id'], p['description'], 
-                mainText:mainText,
-                secondaryText:secondaryText,
-                terms:terms,
-                types:types);
+            return Suggestion(p['place_id'], p['description'],
+                mainText: mainText,
+                secondaryText: secondaryText,
+                terms: terms,
+                types: types);
           } else {
             // just use the simple Suggestion parts we need
             return Suggestion(p['place_id'], p['description']);

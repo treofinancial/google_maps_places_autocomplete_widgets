@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:maps_places_autocomplete/maps_places_autocomplete_textfield.dart';
-import 'package:maps_places_autocomplete/maps_places_autocomplete_textformfield.dart';
+import 'package:google_maps_places_autocomplete_widgets/address_autocomplete_widgets.dart';
 import '/privatekeys.dart';
 
 void main() {
@@ -120,7 +119,6 @@ class _TextFieldExampleState extends State<TextFieldExample> {
 
   }
 
-
   // write a function to receive the place details callback
   void onSuggestionClick(Place placeDetails) {
     debugPrint('onSuggestionClick( placeDetails:$placeDetails )');
@@ -161,7 +159,7 @@ class _TextFieldExampleState extends State<TextFieldExample> {
                 const Text('Example of ZipCode/Postal Code lookup:'),
                 SizedBox(
                     height: 60,
-                    child: MapsPlacesAutocompleteTextField(
+                    child: AddressAutocompleteTextField(
                       postalCodeLookup: true,
                       keyboardType: TextInputType.number,
                       maxLength: 5,
@@ -178,15 +176,18 @@ class _TextFieldExampleState extends State<TextFieldExample> {
                       onInitialSuggestionClick: onInitialSuggestionClick,
                       onSuggestionClick: onSuggestionClick,
                       hoverColor: Colors.blue,  // for desktop platforms with mouse
-                      selectionColor: Colors.blueAccent, // for desktop platforms with mouse
+                      selectionColor: Colors.green, // for desktop platforms with mouse
+
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
                           margin: const EdgeInsets.fromLTRB(2, 2, 2, 2),  //<<This area will get hoverColor/selectionColor on desktop
                           padding: const EdgeInsets.all(8),
                           alignment: Alignment.centerLeft,
-                          color: Colors.grey,
+                          color: Color.fromARGB(255, 220, 220, 220),
                           child: Text(suggestion.description,
-                                  style:const TextStyle(color:Colors.blueGrey)
+                                  style:const TextStyle(color:Colors.blueGrey,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold)
                                   )
                         );
                       },
@@ -206,12 +207,11 @@ class _TextFieldExampleState extends State<TextFieldExample> {
                     ),
                   ),
 
-
                   // Address lookup TextField example
                   const Text('Example of address lookup:'),
                   SizedBox(
                     height: 40,
-                    child: MapsPlacesAutocompleteTextField(
+                    child: AddressAutocompleteTextField(
 
                       // create a `privatekeys.dart` file and add your API key there 
                       //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
@@ -346,8 +346,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
     super.dispose();
   }
 
-
- // This callback returns what we want to be put into the text control
+  // This callback returns what we want to be put into the text control
   // when they choose an address
   String? onSuggestionClickGetTextToUseForControl(Place placeDetails) {
     String? forOurAddressBox = placeDetails.streetAddress;
@@ -360,6 +359,8 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
   }
 
   /// This method really does not seem to help...
+  /// But i left the ability in because it might help more in 
+  /// countries other than the united states.
   String prepareQuery(String baseAddressQuery) {
     debugPrint('prepareQuery() baseAddressQuery=$baseAddressQuery');
     String built = baseAddressQuery;
@@ -415,7 +416,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
     stateTextController.text = parts[2].trim();
     zipTextController.clear(); // we wont have zip until details come thru
     */
- }
+  }
 
   // write a function to receive the place details callback
   void onSuggestionClick(Place placeDetails) {
@@ -448,7 +449,6 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
               );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return
@@ -460,9 +460,9 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
       key: _formKey,
       child: Column(
       children: <Widget>[
-        const LeftAlignedSimpleRow('Address'),
-        MapsPlacesAutocompleteTextFormField(
-              // following args specific to MapsPlacesAutocompleteTextFormField()
+        const LeftAlignedLabelRow('Address'),
+        AddressAutocompleteTextFormField(
+              // following args specific to AddressAutocompleteTextFormField()
               mapsApiKey: GOOGLE_MAPS_ACCOUNT_API_KEY,
               debounceTime: 200,
               //In practice this does not seem to help United States address//prepareQuery: prepareQuery,
@@ -471,7 +471,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
               onInitialSuggestionClick: onInitialSuggestionClick,
               onSuggestionClick: onSuggestionClick,
               hoverColor: Colors.purple,  // for desktop platforms with mouse
-              selectionColor: Colors.red, // for desktop platforms with mouse
+              selectionColor: Colors.purpleAccent, // for desktop platforms with mouse
               buildItem: (Suggestion suggestion, int index) {
                 return Container(
                   margin: const EdgeInsets.fromLTRB(2, 2, 2, 2), //<<This area will get hoverColor/selectionColor on desktop
@@ -502,7 +502,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               decoration: getInputDecoration('Start typing address for Autocomplete..'),
             ),
-      const LeftAlignedSimpleRow('City'),
+      const LeftAlignedLabelRow('City'),
       TextFormField(
         controller: cityTextController,
         focusNode: cityFocusNode,
@@ -513,7 +513,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
           return null;
         },
       ),
-      const LeftAlignedSimpleRow('State'),
+      const LeftAlignedLabelRow('State'),
       TextFormField(
         controller: stateTextController,
         focusNode: stateFocusNode,
@@ -524,7 +524,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
           return null;
         },
       ),
-      const LeftAlignedSimpleRow('Zip'),
+      const LeftAlignedLabelRow('Zip'),
       TextFormField(
         controller: zipTextController,
         focusNode: zipFocusNode,
@@ -539,18 +539,13 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
       ),
     ),),),);
   }
-
- 
 }
-
-
-
-class LeftAlignedSimpleRow extends StatelessWidget {
+class LeftAlignedLabelRow extends StatelessWidget {
   final String label;
   final double fontSize;
   final FontWeight fontWeight;
 
-  const LeftAlignedSimpleRow(this.label,
+  const LeftAlignedLabelRow(this.label,
       {this.fontSize = 16.0, this.fontWeight = FontWeight.normal, super.key});
 
   @override

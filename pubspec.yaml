@@ -1,7 +1,7 @@
-name: maps_places_autocomplete
-description: Google Places Api for Address Autocomplete.
+name: google_maps_places_autocomplete_widgets
+description: TextField and TextFormField widgets using Google Maps Places Api for Address Autocompletion.
 version: 1.0.1
-repository: https://github.com/timmaffett/maps_places_autocomplete
+repository: https://github.com/timmaffett/google_maps_places_autocomplete_widgets
 
 environment:
   sdk: ">=2.17.0 <=4.0.0"

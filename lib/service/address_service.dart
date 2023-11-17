@@ -1,6 +1,6 @@
-import 'package:maps_places_autocomplete/api/place_api_provider.dart';
-import 'package:maps_places_autocomplete/model/place.dart';
-import 'package:maps_places_autocomplete/model/suggestion.dart';
+import '/api/place_api_provider.dart';
+import '/model/place.dart';
+import '/model/suggestion.dart';
 
 class AddressService {
   AddressService(this.sessionToken, this.mapsApiKey, this.componentCountry,
