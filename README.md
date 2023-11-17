@@ -4,7 +4,7 @@ Feature complete, 'drop in' replacements for Flutter `TextField` or `TextFormFie
 The only required additional parameter is your Google Maps API key.
 Just rename `TextField` -> `AddressAutocompleteTextField`,
 (or `TextFormField` -> `AddressAutocompleteTextFormField`),
-and add your `mapsApiKey:'YOUR_GOOGLE_MAPS_API_KEY'` as only required additional parameter.
+and add your `mapsApiKey:'YOUR_GOOGLE_MAPS_API_KEY'` as the only required additional parameter.
 
 If desired customize any look/behavior of the autocompletion using the additional optional parameters.
 
@@ -30,13 +30,6 @@ Additionaly Postal code/Zip code autocompletion is supported using the `postalCo
 - The base classes and mixin generics provided in this package allow for the addition
   of address autocompletion to virtually any of custom widgets.
 
-## Getting started
-
-A complete example mobile/desktop applications illustrates the use of both common
-and optional parameters.
-This includes the use of the address autocomplete TextFormField widget to fill
-multiple other TextFormFields from the user's selectioned address suggestion.
-
 ## Usage
 
 You can find a complete example of usage in `example/main.dart`.
@@ -57,7 +50,7 @@ AddressAutocompleteTextField(
     componentCountry: 'us',
     language: 'en-US'
 
-    ..any other arguments that you would use with a TextField..
+    //..any other arguments that you would use with a TextField..
 
 ),
 ```
@@ -71,7 +64,7 @@ AddressAutocompleteTextFormField(
     componentCountry: 'us',
     language: 'en-US'
 
-    ..any other arguments that you would use with a TextFormField..
+    //..any other arguments that you would use with a TextFormField..
 ),
 
 
@@ -106,6 +99,12 @@ void onSuggestionClick(Place placeDetails) {
   }
 ```
 
+## More complex use and customization examples
+
+A complete example mobile/desktop applications illustrates the use of both common
+and optional parameters.
+This includes the use of the address autocomplete TextFormField widget to fill
+multiple other TextFormFields from the user's selected address suggestion.
 
 ## Additional information
 
@@ -118,3 +117,6 @@ This package was originally based on source code from the package
 `maps_places_autocomplete 0.0.2` by @leandro-zanardi.  As I customized my use case
 within my own apps the source code diverged significantly from the original package
 and it was easiest for me to create my own new package.
+
+The rather unfortunate (and long) name for this package is a result of the
+pub.dev namespace clutter of various packages also using Google Maps Places API.
