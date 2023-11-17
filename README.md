@@ -12,7 +12,8 @@ Additionaly Postal code/Zip code autocompletion is supported using the `postalCo
 
 ## Demo
 
-![Short Demo of Included Example](https://github.com/timmaffett/google_maps_places_autocomplete_widgets/blob/master/media/demonstration.gif?raw=true)
+<img src="https://raw.githubusercontent.com/timmaffett/google_maps_places_autocomplete_widgets/blob/master/media/demonstration.gif" width="100%">
+![Short Demo of Included Example](https://raw.githubusercontent.com/timmaffett/google_maps_places_autocomplete_widgets/blob/master/media/demonstration.gif)
 
 ## Features
 
