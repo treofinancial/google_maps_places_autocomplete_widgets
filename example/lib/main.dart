@@ -8,13 +8,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Google Address AutoComplete Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -28,12 +29,12 @@ class MyApp extends StatelessWidget {
               Tab(text: 'TextFormField'),
             ],
           ),
-          title: const Text('Google Places AutoComplete', style:TextStyle(fontSize:14,fontWeight:FontWeight.bold)),
+          title: const Center( child:Text('Google_Map_Places_AutoComplete_Widgets Demo', style:TextStyle(fontSize:16,fontWeight:FontWeight.bold))),
         ),
         body: const TabBarView(
             children: [
-              TextFieldExample(title: 'TextField Example'),
-              TextFormFieldExample(),
+              AddressAutocompleteTextFieldExample(title: 'TextField Example'),
+              AddressAutocompleteTextFormFieldExample(),
             ],
           ),
         ),
@@ -42,16 +43,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TextFieldExample extends StatefulWidget {
-  const TextFieldExample({Key? key, required this.title}) : super(key: key);
+class AddressAutocompleteTextFieldExample extends StatefulWidget {
+  const AddressAutocompleteTextFieldExample({super.key, required this.title});
 
   final String title;
 
   @override
-  State<TextFieldExample> createState() => _TextFieldExampleState();
+  State<AddressAutocompleteTextFieldExample> createState() => _AddressAutocompleteTextFieldExampleState();
 }
 
-class _TextFieldExampleState extends State<TextFieldExample> {
+class _AddressAutocompleteTextFieldExampleState extends State<AddressAutocompleteTextFieldExample> {
   String? _suggestionPlaceId;
   String? _suggestionDescription;
   String? _name;
@@ -295,14 +296,14 @@ class _TextFieldExampleState extends State<TextFieldExample> {
 }
 
 
-class TextFormFieldExample extends StatefulWidget {
-  const TextFormFieldExample({super.key});
+class AddressAutocompleteTextFormFieldExample extends StatefulWidget {
+  const AddressAutocompleteTextFormFieldExample({super.key});
 
   @override
-  State<TextFormFieldExample> createState() => _TextFormFieldExampleState();
+  State<AddressAutocompleteTextFormFieldExample> createState() => _AddressAutocompleteTextFormFieldExampleState();
 }
 
-class _TextFormFieldExampleState extends State<TextFormFieldExample> {
+class _AddressAutocompleteTextFormFieldExampleState extends State<AddressAutocompleteTextFormFieldExample> {
   final _formKey = GlobalKey<FormState>();
   late FocusNode addressFocusNode;
   late FocusNode cityFocusNode;

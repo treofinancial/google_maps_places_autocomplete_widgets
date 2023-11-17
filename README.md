@@ -10,6 +10,10 @@ If desired customize any look/behavior of the autocompletion using the additiona
 
 Additionaly Postal code/Zip code autocompletion is supported using the `postalCodeLookup:true` parameter.
 
+## Demo
+
+![Short Demo of Included Example](https://github.com/timmaffett/google_maps_places_autocomplete_widgets/blob/master/media/demonstration.gif?raw=true)
+
 ## Features
 
 - Support for most common `TextField` and `TextFormField` parameters (and any
