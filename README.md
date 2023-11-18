@@ -10,6 +10,8 @@ If desired customize any look/behavior of the autocompletion using the additiona
 
 Additionaly Postal code/Zip code autocompletion is supported using the `postalCodeLookup:true` parameter.
 
+Easily incorporated into existing forms which contain mulitple fields for capturing address information.
+
 ## Demo
 
 ![Short Demo of Included Example](media/small_demo.gif)
@@ -114,6 +116,8 @@ multiple other TextFormFields from the user's selected address suggestion.
 
 This package implements the oficial documention of Google Maps Places API
 and use address as types and receive a detail with address_component and geometry as fields only
+
+GitHub Repo: [https://github.com/timmaffett/google_maps_places_autocomplete_widgets]( https://github.com/timmaffett/google_maps_places_autocomplete_widgets)
 
 ## Acknowledgements
 

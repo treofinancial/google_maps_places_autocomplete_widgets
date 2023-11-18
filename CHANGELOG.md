@@ -1,3 +1,10 @@
+# google_maps_places_autocomplete_widgets package
+
+## 1.2.1
+
+* Updated README.md, modified version number to properly reflect the number of internal versions
+  iterated through before public release.
+
 ## 1.0.1
 
 * Refactor suggestion query and overlay functionality to `SuggestionOverlayMixin`
