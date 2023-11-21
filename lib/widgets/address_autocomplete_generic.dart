@@ -183,7 +183,7 @@ mixin SuggestionOverlayMixin<T extends AddresssAutocompleteStatefulWidget>
     if(entry != null) {
       entry?.remove();
       entry = null;
-
+debugPrint('hideOverlay suggestionHasBeenSelected=$suggestionHasBeenSelected');
       if(!suggestionHasBeenSelected) {
         triggerNoSuggestionCallback();
       }

@@ -181,7 +181,7 @@ class _AddressAutocompleteTextFieldExampleState extends State<AddressAutocomplet
                       onFinishedEditingWithNoSuggestion: (text) {
                         // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
                         // otherwise decide what to do based on what the user typed, can be an empty string
-                        debugPrint("text typed: " + text);
+                        debugPrint("onFinishedEditingWithNoSuggestion()  text typed: " + text);
                       },
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
@@ -228,6 +228,11 @@ class _AddressAutocompleteTextFieldExampleState extends State<AddressAutocomplet
                       onSuggestionClickGetTextToUseForControl: onSuggestionClickGetTextToUseForControl,
                       onInitialSuggestionClick: onInitialSuggestionClick,
                       onSuggestionClick: onSuggestionClick,
+                      onFinishedEditingWithNoSuggestion: (text) {
+                        // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
+                        // otherwise decide what to do based on what the user typed, can be an empty string
+                        debugPrint("onFinishedEditingWithNoSuggestion()  text typed: " + text);
+                      },
                       hoverColor: Colors.purple,  // for desktop platforms with mouse
                       selectionColor: Colors.red, // for desktop platforms with mouse
                       buildItem: (Suggestion suggestion, int index) {
@@ -475,6 +480,11 @@ class _AddressAutocompleteTextFormFieldExampleState extends State<AddressAutocom
               onSuggestionClickGetTextToUseForControl: onSuggestionClickGetTextToUseForControl,
               onInitialSuggestionClick: onInitialSuggestionClick,
               onSuggestionClick: onSuggestionClick,
+              onFinishedEditingWithNoSuggestion: (text) {
+                // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
+                // otherwise decide what to do based on what the user typed, can be an empty string
+                debugPrint("onFinishedEditingWithNoSuggestion()  text typed: " + text);
+              },
               hoverColor: Colors.purple,  // for desktop platforms with mouse
               selectionColor: Colors.purpleAccent, // for desktop platforms with mouse
               buildItem: (Suggestion suggestion, int index) {
