@@ -178,7 +178,11 @@ class _AddressAutocompleteTextFieldExampleState extends State<AddressAutocomplet
                       onSuggestionClick: onSuggestionClick,
                       hoverColor: Colors.blue,  // for desktop platforms with mouse
                       selectionColor: Colors.green, // for desktop platforms with mouse
-
+                      onFinishedEditingWithNoSuggestion: (text) {
+                        // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
+                        // otherwise decide what to do based on what the user typed, can be an empty string
+                        debugPrint("text typed: " + text);
+                      },
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
                           margin: const EdgeInsets.fromLTRB(2, 2, 2, 2),  //<<This area will get hoverColor/selectionColor on desktop

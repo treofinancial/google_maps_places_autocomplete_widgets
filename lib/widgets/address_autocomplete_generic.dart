@@ -30,7 +30,11 @@ abstract class AddresssAutocompleteStatefulWidget extends StatefulWidget {
   ///Callback triggered when after Place has been retreived after item is selected
   abstract final void Function(Place place)? onSuggestionClick;
 
-  ///Callback triggered when a item is selected
+  //callback triggered when losing focus but no suggestion was selected
+  abstract final void Function(String text)? onFinishedEditingWithNoSuggestion;
+
+  ///Callback triggered when a
+  /// item is selected
   abstract final String? Function(Place place)?
       onSuggestionClickGetTextToUseForControl;
 
@@ -175,18 +179,34 @@ mixin SuggestionOverlayMixin<T extends AddresssAutocompleteStatefulWidget>
     }
   }
 
-  void hideOverlay() {
-    entry?.remove();
-    entry = null;
+  void hideOverlay({bool suggestionHasBeenSelected = false}) {
+    if(entry != null) {
+      entry?.remove();
+      entry = null;
+
+      if(!suggestionHasBeenSelected) {
+        triggerNoSuggestionCallback();
+      }
+    }
   }
 
+  void triggerNoSuggestionCallback() {
+    if(widget.onFinishedEditingWithNoSuggestion != null) {
+      widget.onFinishedEditingWithNoSuggestion!(controller?.text ?? '');
+    }
+  }
   void _clearText() {
     setState(() {
       if (widget.onClearClick != null) {
         widget.onClearClick!();
       }
       controller?.clear();
-      focusNode.unfocus();
+      if(!focusNode.hasFocus) {
+        triggerNoSuggestionCallback();
+      }
+      else {
+        focusNode.unfocus();
+      }
       suggestions = [];
     });
   }
@@ -203,7 +223,7 @@ mixin SuggestionOverlayMixin<T extends AddresssAutocompleteStatefulWidget>
         onTap: () async {
           if (index < suggestions.length) {
             final s = suggestions[index];
-            hideOverlay();
+            hideOverlay(suggestionHasBeenSelected: true);
             focusNode.unfocus();
             if (widget.onInitialSuggestionClick != null) {
               widget.onInitialSuggestionClick!(s);

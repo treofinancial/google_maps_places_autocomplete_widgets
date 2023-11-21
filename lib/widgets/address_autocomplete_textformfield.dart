@@ -41,6 +41,10 @@ class AddressAutocompleteTextFormField
   @override
   final void Function(Place place)? onSuggestionClick;
 
+  //callback triggered when losing focus but no suggestion was selected
+  @override
+  final void Function(String text)? onFinishedEditingWithNoSuggestion;
+
   ///Callback triggered when a item is selected
   @override
   final String? Function(Place place)? onSuggestionClickGetTextToUseForControl;
@@ -218,6 +222,7 @@ class AddressAutocompleteTextFormField
     this.onClearClick,
     this.onInitialSuggestionClick,
     this.onSuggestionClick,
+    this.onFinishedEditingWithNoSuggestion,
     this.onSuggestionClickGetTextToUseForControl,
     this.buildItem,
     this.hoverColor,
