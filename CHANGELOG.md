@@ -1,8 +1,12 @@
 # google_maps_places_autocomplete_widgets package
 
+## 1.2.3
+
+* Updated to current packages
+
 ## 1.2.2
 
-* Added `onFinishedEditingWithNoSuggestion` callback from https://github.com/leandro-zanardi/maps_places_autocomplete/pull/6
+* Added `onFinishedEditingWithNoSuggestion` callback from [this pr](https://github.com/leandro-zanardi/maps_places_autocomplete/pull/6)
 
 ## 1.2.1
 

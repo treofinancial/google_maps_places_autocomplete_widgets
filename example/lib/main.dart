@@ -181,14 +181,14 @@ class _AddressAutocompleteTextFieldExampleState extends State<AddressAutocomplet
                       onFinishedEditingWithNoSuggestion: (text) {
                         // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
                         // otherwise decide what to do based on what the user typed, can be an empty string
-                        debugPrint("onFinishedEditingWithNoSuggestion()  text typed: " + text);
+                        debugPrint('onFinishedEditingWithNoSuggestion()  text typed: $text');
                       },
                       buildItem: (Suggestion suggestion, int index) {
                         return Container(
                           margin: const EdgeInsets.fromLTRB(2, 2, 2, 2),  //<<This area will get hoverColor/selectionColor on desktop
                           padding: const EdgeInsets.all(8),
                           alignment: Alignment.centerLeft,
-                          color: Color.fromARGB(255, 220, 220, 220),
+                          color: const Color.fromARGB(255, 220, 220, 220),
                           child: Text(suggestion.description,
                                   style:const TextStyle(color:Colors.blueGrey,
                                               fontSize: 16,
@@ -231,7 +231,7 @@ class _AddressAutocompleteTextFieldExampleState extends State<AddressAutocomplet
                       onFinishedEditingWithNoSuggestion: (text) {
                         // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
                         // otherwise decide what to do based on what the user typed, can be an empty string
-                        debugPrint("onFinishedEditingWithNoSuggestion()  text typed: " + text);
+                        debugPrint('onFinishedEditingWithNoSuggestion()  text typed: $text');
                       },
                       hoverColor: Colors.purple,  // for desktop platforms with mouse
                       selectionColor: Colors.red, // for desktop platforms with mouse
@@ -483,7 +483,7 @@ class _AddressAutocompleteTextFormFieldExampleState extends State<AddressAutocom
               onFinishedEditingWithNoSuggestion: (text) {
                 // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
                 // otherwise decide what to do based on what the user typed, can be an empty string
-                debugPrint("onFinishedEditingWithNoSuggestion()  text typed: " + text);
+                debugPrint('onFinishedEditingWithNoSuggestion()  text typed: $text');
               },
               hoverColor: Colors.purple,  // for desktop platforms with mouse
               selectionColor: Colors.purpleAccent, // for desktop platforms with mouse
