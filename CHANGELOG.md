@@ -1,5 +1,9 @@
 # google_maps_places_autocomplete_widgets package
 
+## 1.3.1
+
+* Added `screenshots:` section to `pubspec.yaml`
+
 ## 1.3.0
 
 * Added `type` and `types` arguments for specifying the `AutoCompleteType` enum of Google Places autocomplete information to
