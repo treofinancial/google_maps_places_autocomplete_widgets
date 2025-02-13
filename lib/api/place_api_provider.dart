@@ -105,18 +105,19 @@ result["predictions"] =
   Future<List<Suggestion>> fetchSuggestions(String input,
       {bool includeFullSuggestionDetails = false,
       required List<AutoCompleteType> types}) async {
-
     /// OK, we need to check the types array..
     String typesString = '';
-    for(final type in types) {
-      if(type.onlySingleValueAllowed && types.length>1) {
-        throw Exception('If $type is specified then it is the ONLY autocomplete type allowed by Google Places. See https://developers.google.com/maps/documentation/places/web-service/autocomplete#types');
+    for (final type in types) {
+      if (type.onlySingleValueAllowed && types.length > 1) {
+        throw Exception(
+            'If $type is specified then it is the ONLY autocomplete type allowed by Google Places. See https://developers.google.com/maps/documentation/places/web-service/autocomplete#types');
       }
-      if(typesString.length>0) typesString += '|';
+      if (typesString.length > 0) typesString += '|';
       typesString += type.typeString;
     }
-    if(types.length>5) {
-        throw Exception('A maximum of 5 autocomplete types are allowed by Google Places. See https://developers.google.com/maps/documentation/places/web-service/autocomplete#types');
+    if (types.length > 5) {
+      throw Exception(
+          'A maximum of 5 autocomplete types are allowed by Google Places. See https://developers.google.com/maps/documentation/places/web-service/autocomplete#types');
     }
 
     final Map<String, dynamic> parameters = <String, dynamic>{

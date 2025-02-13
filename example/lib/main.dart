@@ -104,7 +104,6 @@ class _AddressAutocompleteTextFieldExampleState
     return '${placeDetails.name}, ${placeDetails.formattedAddress}';
   }
 
-
   // This is called Immediatelly when user clicks suggestion and BEFORE
   // the async request to get place
   void onInitialSuggestionClick(Suggestion suggestion) {
@@ -216,7 +215,6 @@ class _AddressAutocompleteTextFieldExampleState
                 ),
               ),
 
-
               // Cities autocompletion TextField example
               const Text('Example of City autocompletion:'),
               SizedBox(
@@ -273,7 +271,6 @@ class _AddressAutocompleteTextFieldExampleState
                 ),
               ),
 
-
               // Cities autocompletion TextField example
               const Text('Example of Business autocompletion:'),
               SizedBox(
@@ -329,7 +326,6 @@ class _AddressAutocompleteTextFieldExampleState
                   ),
                 ),
               ),
-
 
               // Address lookup TextField example
               const Text('Example of address lookup:'),

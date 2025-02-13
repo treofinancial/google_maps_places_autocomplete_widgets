@@ -97,7 +97,8 @@ class AddressAutocompleteTextFormField
 
   /// (deprecated) PostalCode lookup instead of address lookup (defaults to false)
   /// (This has now been deprecated and replaced with [type] parameter `type:AutoCompleteType.postalCode`).
-  @Deprecated("If passing true use `type:AutoCompleteType.postalCode` instead. (false == passing `type:AutoCompleteType.address`")
+  @Deprecated(
+      "If passing true use `type:AutoCompleteType.postalCode` instead. (false == passing `type:AutoCompleteType.address`")
   final bool? postalCodeLookup;
 
   /// Single AutoCompleteType enum for type of information to autocomplete
@@ -299,11 +300,13 @@ class AddressAutocompleteTextFormField
     this.enableIMEPersonalizedLearning = true,
     this.mouseCursor,
     this.contextMenuBuilder,
-  }) : assert( (postalCodeLookup==true && type==null && types==null) 
-              || (postalCodeLookup==false && type==null && types==null)
-              || (postalCodeLookup==null && type==null && types==null)
-              || (postalCodeLookup==null && type!=null && types==null)
-              || (postalCodeLookup==null && type==null && types!=null), 'You can only supply value for [type], [types] (or deprecated `postalCodeLookup`).  No combinations allowed');
+  }) : assert(
+            (postalCodeLookup == true && type == null && types == null) ||
+                (postalCodeLookup == false && type == null && types == null) ||
+                (postalCodeLookup == null && type == null && types == null) ||
+                (postalCodeLookup == null && type != null && types == null) ||
+                (postalCodeLookup == null && type == null && types != null),
+            'You can only supply value for [type], [types] (or deprecated `postalCodeLookup`).  No combinations allowed');
 
   @override
   State<StatefulWidget> createState() =>

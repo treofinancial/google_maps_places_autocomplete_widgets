@@ -11,7 +11,6 @@ import '/model/suggestion.dart';
 import '/model/place.dart';
 import '/service/address_service.dart';
 
-
 abstract class AddresssAutocompleteStatefulWidget extends StatefulWidget {
   const AddresssAutocompleteStatefulWidget({super.key});
 
@@ -77,7 +76,8 @@ abstract class AddresssAutocompleteStatefulWidget extends StatefulWidget {
 
   /// (deprecated) PostalCode lookup instead of address lookup (defaults to false)
   /// (This has now been deprecated and replaced with [type] parameter `type:AutoCompleteType.postalCode`).
-  @Deprecated("If passing true use `type:AutoCompleteType.postalCode` instead. (false == passing `type:AutoCompleteType.address`")
+  @Deprecated(
+      "If passing true use `type:AutoCompleteType.postalCode` instead. (false == passing `type:AutoCompleteType.address`")
   abstract final bool? postalCodeLookup;
 
   /// Single AutoCompleteType enum for type of information to autocomplete
@@ -336,22 +336,39 @@ mixin SuggestionOverlayMixin<T extends AddresssAutocompleteStatefulWidget>
       text = widget.prepareQuery!(text);
     }
     if (text != _lastText && text.isNotEmpty) {
-      assert( (widget.postalCodeLookup==true && widget.type==null && widget.types==null) 
-              || (widget.postalCodeLookup==false && widget.type==null && widget.types==null) 
-              || (widget.postalCodeLookup==null && widget.type==null && widget.types==null)
-              || (widget.postalCodeLookup==null && widget.type!=null && widget.types==null)
-              || (widget.postalCodeLookup==null && widget.type==null && widget.types!=null), 'You can only supply value for [type], [types] (or deprecated `postalCodeLookup`).  No combinations allowed');
+      assert(
+          (widget.postalCodeLookup == true &&
+                  widget.type == null &&
+                  widget.types == null) ||
+              (widget.postalCodeLookup == false &&
+                  widget.type == null &&
+                  widget.types == null) ||
+              (widget.postalCodeLookup == null &&
+                  widget.type == null &&
+                  widget.types == null) ||
+              (widget.postalCodeLookup == null &&
+                  widget.type != null &&
+                  widget.types == null) ||
+              (widget.postalCodeLookup == null &&
+                  widget.type == null &&
+                  widget.types != null),
+          'You can only supply value for [type], [types] (or deprecated `postalCodeLookup`).  No combinations allowed');
 
       _lastText = text;
       suggestions = await addressService.search(text,
           includeFullSuggestionDetails:
               (widget.onInitialSuggestionClick != null),
           types: [
-                  if(widget.postalCodeLookup==true) AutoCompleteType.postalCode
-                  else if(widget.postalCodeLookup==false || (widget.type==null &&widget.types==null)) AutoCompleteType.address
-                  else if(widget.type!=null) widget.type! 
-                  else if(widget.types!=null) ...widget.types!
-                ]);
+            if (widget.postalCodeLookup == true)
+              AutoCompleteType.postalCode
+            else if (widget.postalCodeLookup == false ||
+                (widget.type == null && widget.types == null))
+              AutoCompleteType.address
+            else if (widget.type != null)
+              widget.type!
+            else if (widget.types != null)
+              ...widget.types!
+          ]);
     }
     if (entry != null) {
       entry!.markNeedsBuild();
