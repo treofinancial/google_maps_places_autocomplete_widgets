@@ -1,5 +1,9 @@
 # google_maps_places_autocomplete_widgets package
 
+## 1.3.2
+
+* Correct screenshot image
+
 ## 1.3.1
 
 * Added `screenshots:` section to `pubspec.yaml`
