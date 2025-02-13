@@ -94,6 +94,17 @@ class _AddressAutocompleteTextFieldExampleState
     return placeDetails.zipCodePlus4;
   }
 
+  String? onSuggestionClickFillCitiesCodeControl(Place placeDetails) {
+    //  Format the city, state and country from autocomplete info
+    return '${placeDetails.city}, ${placeDetails.state}, ${placeDetails.country}';
+  }
+
+  String? onSuggestionClickFillEstablishmentCodeControl(Place placeDetails) {
+    //  Print name and formatted address of place
+    return '${placeDetails.name}, ${placeDetails.formattedAddress}';
+  }
+
+
   // This is called Immediatelly when user clicks suggestion and BEFORE
   // the async request to get place
   void onInitialSuggestionClick(Suggestion suggestion) {
@@ -150,7 +161,7 @@ class _AddressAutocompleteTextFieldExampleState
               SizedBox(
                 height: 60,
                 child: AddressAutocompleteTextField(
-                  postalCodeLookup: true,
+                  type: AutoCompleteType.postalCode,
                   keyboardType: TextInputType.number,
                   maxLength: 5,
                   maxLengthEnforcement: MaxLengthEnforcement.enforced,
@@ -204,6 +215,121 @@ class _AddressAutocompleteTextFieldExampleState
                   ),
                 ),
               ),
+
+
+              // Cities autocompletion TextField example
+              const Text('Example of City autocompletion:'),
+              SizedBox(
+                height: 60,
+                child: AddressAutocompleteTextField(
+                  type: AutoCompleteType.cities,
+                  keyboardType: TextInputType.name,
+                  style: const TextStyle(
+                      color: Colors.orange,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                  // create a `privatekeys.dart` file and add your API key there
+                  //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
+                  // the .gitignore file is set so this does not go into source repository.
+                  mapsApiKey: GOOGLE_MAPS_ACCOUNT_API_KEY,
+
+                  // optional callback arg for use when you do not want `formattedAddress`
+                  // to be used to fill the autocomplete textfield when an address is chosen.
+                  onSuggestionClickGetTextToUseForControl:
+                      onSuggestionClickFillCitiesCodeControl,
+                  onInitialSuggestionClick: onInitialSuggestionClick,
+                  onSuggestionClick: onSuggestionClick,
+                  hoverColor: Colors.blue, // for desktop platforms with mouse
+                  selectionColor:
+                      Colors.green, // for desktop platforms with mouse
+                  onFinishedEditingWithNoSuggestion: (text) {
+                    // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
+                    // otherwise decide what to do based on what the user typed, can be an empty string
+                    debugPrint(
+                        'onFinishedEditingWithNoSuggestion()  text typed: $text');
+                  },
+                  buildItem: (Suggestion suggestion, int index) {
+                    return Container(
+                        margin: const EdgeInsets.fromLTRB(2, 2, 2,
+                            2), //<<This area will get hoverColor/selectionColor on desktop
+                        padding: const EdgeInsets.all(8),
+                        alignment: Alignment.centerLeft,
+                        color: const Color.fromARGB(255, 220, 220, 220),
+                        child: Text(suggestion.description,
+                            style: const TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold)));
+                  },
+                  clearButton: const Icon(Icons.close),
+                  componentCountry: 'us',
+                  language: 'en-Us',
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(8),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    hintText: 'Enter city name',
+                  ),
+                ),
+              ),
+
+
+              // Cities autocompletion TextField example
+              const Text('Example of Business autocompletion:'),
+              SizedBox(
+                height: 60,
+                child: AddressAutocompleteTextField(
+                  type: AutoCompleteType.establishment,
+                  keyboardType: TextInputType.name,
+                  style: const TextStyle(
+                      color: Colors.cyan,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                  // create a `privatekeys.dart` file and add your API key there
+                  //   `const GOOGLE_MAPS_ACCOUNT_API_KEY = 'YourGoogleMapsApiKey_XXXXyyyzzzz';`
+                  // the .gitignore file is set so this does not go into source repository.
+                  mapsApiKey: GOOGLE_MAPS_ACCOUNT_API_KEY,
+
+                  // optional callback arg for use when you do not want `formattedAddress`
+                  // to be used to fill the autocomplete textfield when an address is chosen.
+                  onSuggestionClickGetTextToUseForControl:
+                      onSuggestionClickFillEstablishmentCodeControl,
+                  onInitialSuggestionClick: onInitialSuggestionClick,
+                  onSuggestionClick: onSuggestionClick,
+                  hoverColor: Colors.blue, // for desktop platforms with mouse
+                  selectionColor:
+                      Colors.green, // for desktop platforms with mouse
+                  onFinishedEditingWithNoSuggestion: (text) {
+                    // you should invalidate the last entry of onSuggestionClick if you really need a valid location,
+                    // otherwise decide what to do based on what the user typed, can be an empty string
+                    debugPrint(
+                        'onFinishedEditingWithNoSuggestion()  text typed: $text');
+                  },
+                  buildItem: (Suggestion suggestion, int index) {
+                    return Container(
+                        margin: const EdgeInsets.fromLTRB(2, 2, 2,
+                            2), //<<This area will get hoverColor/selectionColor on desktop
+                        padding: const EdgeInsets.all(8),
+                        alignment: Alignment.centerLeft,
+                        color: const Color.fromARGB(255, 220, 220, 220),
+                        child: Text(suggestion.description,
+                            style: const TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold)));
+                  },
+                  clearButton: const Icon(Icons.close),
+                  componentCountry: 'us',
+                  language: 'en-Us',
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(8),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white)),
+                    hintText: 'Enter business name',
+                  ),
+                ),
+              ),
+
 
               // Address lookup TextField example
               const Text('Example of address lookup:'),

@@ -8,7 +8,20 @@ and add your `mapsApiKey:'YOUR_GOOGLE_MAPS_API_KEY'` as the only required additi
 
 If desired customize any look/behavior of the autocompletion using the additional optional parameters.
 
-Additionally Postal code/Zip code autocompletion is supported using the `postalCodeLookup:true` parameter.
+Additionally any of the other Google Places autocomplete information can be retrieved.
+
+- Postal code/Zip code autocompletion is supported using the `type:AutoCompleteType.postalCode` parameter.
+- Cities autocompletion is supported using the `type:AutoCompleteType.cities` parameter.  
+   (`type:AutoCompleteType.cities` returns any `AutoCompleteType.locality` or `AutoCompleteType.administrativeAreaLevel_3` matched).
+- Businesses and Establishment autocompletion is supported using the `type:AutoCompleteType.establishment` parameter.
+- Region autocompletion is supported using the `type:AutoCompleteType.regions` parameter.  
+    (`AutoCompleteType.regions` returns any `AutoCompleteType.locality`, `AutoCompleteType.sublocality`, `AutoCompleteType.postal_code`,
+    `AutoCompleteType.country`, `AutoCompleteType.administrativeAreaLevel_1` or `AutoCompleteType.administrativeAreaLevel_2` matched)
+- Or you can combine up to 5 of the `AutoCompleteType` enums using the `types` parameter  
+    (eg. `types:[AutoCompleteType.bookStore,AutoCompleteType.bicycleStore,AutoCompleteType.school]`).
+
+ (See [Table 3](https://developers.google.com/maps/documentation/places/web-service/supported_types#table3),
+ [Table 1](https://developers.google.com/maps/documentation/places/web-service/supported_types#table1), and [Table 2](https://developers.google.com/maps/documentation/places/web-service/supported_types#table2)).
 
 Easily incorporated into existing forms which contain multiple fields for capturing address information.
 
@@ -20,7 +33,8 @@ Easily incorporated into existing forms which contain multiple fields for captur
 
 - Support for most common `TextField` and `TextFormField` parameters (and any
   less common parameter can easily be added).
-- Support for both address and postal/zip code autocompletion.
+- Support for both address and postal/zip code autocompletion. (`type:AutoCompleteType.address` or `type:AutoCompleteType.postalCode`)
+- Support for ANY of other the Google Places autocompletion types (See [Table 3](https://developers.google.com/maps/documentation/places/web-service/supported_types#table3), [Table 1](https://developers.google.com/maps/documentation/places/web-service/supported_types#table1), and [Table 2](https://developers.google.com/maps/documentation/places/web-service/supported_types#table2))
 - Robust set of optional callbacks that all customizing behavior in virtually any way.
 - Easy 'drop in' replacement of address field in any flutter form.
 - Easy customization of virtually every look and feel display/behavior property.

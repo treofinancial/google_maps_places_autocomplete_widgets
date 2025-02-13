@@ -1,13 +1,16 @@
 library google_maps_places_autocomplete_widgets;
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_places_autocomplete_widgets/api/autocomplete_types.dart';
 
 import '/model/suggestion.dart';
 import '/model/place.dart';
 import '/service/address_service.dart';
+
 
 abstract class AddresssAutocompleteStatefulWidget extends StatefulWidget {
   const AddresssAutocompleteStatefulWidget({super.key});
@@ -72,8 +75,21 @@ abstract class AddresssAutocompleteStatefulWidget extends StatefulWidget {
   ///Inform Google places of desired language the results should be returned.
   abstract final String? language;
 
-  ///PostalCode lookup instead of address lookup (defaults to false)
-  abstract final bool postalCodeLookup;
+  /// (deprecated) PostalCode lookup instead of address lookup (defaults to false)
+  /// (This has now been deprecated and replaced with [type] parameter `type:AutoCompleteType.postalCode`).
+  @Deprecated("If passing true use `type:AutoCompleteType.postalCode` instead. (false == passing `type:AutoCompleteType.address`")
+  abstract final bool? postalCodeLookup;
+
+  /// Single AutoCompleteType enum for type of information to autocomplete
+  /// (Defaults to [AutoCompleteType.address] , use [AutoCompleteType.postalCode] for Zipcode lookup)
+  /// This must be null if [types] is supplied
+  abstract final AutoCompleteType? type;
+
+  /// Can be used as an *alternative* to [type] and allows a list of up to 5 AutoCompleteType enums
+  /// to specify the types of autocomplete information to lookup.
+  /// (Google places api only allows 5 types maximum)
+  /// ([type] must not be supplied if [types] is used).
+  abstract final List<AutoCompleteType>? types;
 
   ///debounce time in milliseconds (default 600)
   abstract final int debounceTime;
@@ -320,11 +336,22 @@ mixin SuggestionOverlayMixin<T extends AddresssAutocompleteStatefulWidget>
       text = widget.prepareQuery!(text);
     }
     if (text != _lastText && text.isNotEmpty) {
+      assert( (widget.postalCodeLookup==true && widget.type==null && widget.types==null) 
+              || (widget.postalCodeLookup==false && widget.type==null && widget.types==null) 
+              || (widget.postalCodeLookup==null && widget.type==null && widget.types==null)
+              || (widget.postalCodeLookup==null && widget.type!=null && widget.types==null)
+              || (widget.postalCodeLookup==null && widget.type==null && widget.types!=null), 'You can only supply value for [type], [types] (or deprecated `postalCodeLookup`).  No combinations allowed');
+
       _lastText = text;
       suggestions = await addressService.search(text,
           includeFullSuggestionDetails:
               (widget.onInitialSuggestionClick != null),
-          postalCodeLookup: widget.postalCodeLookup);
+          types: [
+                  if(widget.postalCodeLookup==true) AutoCompleteType.postalCode
+                  else if(widget.postalCodeLookup==false || (widget.type==null &&widget.types==null)) AutoCompleteType.address
+                  else if(widget.type!=null) widget.type! 
+                  else if(widget.types!=null) ...widget.types!
+                ]);
     }
     if (entry != null) {
       entry!.markNeedsBuild();

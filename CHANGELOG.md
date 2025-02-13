@@ -1,5 +1,13 @@
 # google_maps_places_autocomplete_widgets package
 
+## 1.2.6
+
+* Added `type` and `types` arguments for specifying the `AutoCompleteType` enum of Google Places autocomplete information to
+  return.  (Defaults to `AutoCompleteType.address`).  
+  This allows `AutoCompleteType.cities` as [Issue #1](https://github.com/timmaffett/google_maps_places_autocomplete_widgets/issues/1) requested.
+* Deprecated the use of `postalCodeLookup` parameter, use `type:AutoCompleteType.postalCode` instead)
+* Added `homepage:` and `issuetracker:` fields to pubspec.yaml
+
 ## 1.2.5
 
 * Updated pubspec.yaml to add topics

@@ -1,4 +1,5 @@
 import '/api/place_api_provider.dart';
+import '/api/autocomplete_types.dart';
 import '/model/place.dart';
 import '/model/suggestion.dart';
 
@@ -17,10 +18,10 @@ class AddressService {
 
   Future<List<Suggestion>> search(String query,
       {bool includeFullSuggestionDetails = false,
-      bool postalCodeLookup = false}) async {
+      List<AutoCompleteType> types = const [AutoCompleteType.address]}) async {
     return await apiClient.fetchSuggestions(query,
         includeFullSuggestionDetails: includeFullSuggestionDetails,
-        postalCodeLookup: postalCodeLookup);
+        types: types);
   }
 
   Future<Place> getPlaceDetail(String placeId) async {
