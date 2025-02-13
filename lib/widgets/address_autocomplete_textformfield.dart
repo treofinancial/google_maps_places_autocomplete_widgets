@@ -1,4 +1,4 @@
-library google_maps_places_autocomplete_widgets;
+library;
 
 import 'dart:async';
 
@@ -97,6 +97,7 @@ class AddressAutocompleteTextFormField
 
   /// (deprecated) PostalCode lookup instead of address lookup (defaults to false)
   /// (This has now been deprecated and replaced with [type] parameter `type:AutoCompleteType.postalCode`).
+  @override 
   @Deprecated(
       "If passing true use `type:AutoCompleteType.postalCode` instead. (false == passing `type:AutoCompleteType.address`")
   final bool? postalCodeLookup;

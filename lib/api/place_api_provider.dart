@@ -112,7 +112,7 @@ result["predictions"] =
         throw Exception(
             'If $type is specified then it is the ONLY autocomplete type allowed by Google Places. See https://developers.google.com/maps/documentation/places/web-service/autocomplete#types');
       }
-      if (typesString.length > 0) typesString += '|';
+      if (typesString.isNotEmpty) typesString += '|';
       typesString += type.typeString;
     }
     if (types.length > 5) {
