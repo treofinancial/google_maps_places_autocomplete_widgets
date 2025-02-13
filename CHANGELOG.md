@@ -1,5 +1,9 @@
 # google_maps_places_autocomplete_widgets package
 
+## 1.2.4
+
+* Updated to current sdk and packages
+
 ## 1.2.3
 
 * Updated to current packages
