@@ -8,9 +8,9 @@ and add your `mapsApiKey:'YOUR_GOOGLE_MAPS_API_KEY'` as the only required additi
 
 If desired customize any look/behavior of the autocompletion using the additional optional parameters.
 
-Additionaly Postal code/Zip code autocompletion is supported using the `postalCodeLookup:true` parameter.
+Additionally Postal code/Zip code autocompletion is supported using the `postalCodeLookup:true` parameter.
 
-Easily incorporated into existing forms which contain mulitple fields for capturing address information.
+Easily incorporated into existing forms which contain multiple fields for capturing address information.
 
 ## Demo
 
@@ -23,8 +23,8 @@ Easily incorporated into existing forms which contain mulitple fields for captur
 - Support for both address and postal/zip code autocompletion.
 - Robust set of optional callbacks that all customizing behavior in virtually any way.
 - Easy 'drop in' replacement of address field in any flutter form.
-- Easy customizition of virtually every look and feel display/behavior property.
-- Hooks allow filling mutiple form fields (City, State, Zip, etc.) from results
+- Easy customization of virtually every look and feel display/behavior property.
+- Hooks allow filling multiple form fields (City, State, Zip, etc.) from results
   of user's address selection from the initial address form field autocomplete
   suggestions.
 - Hooks to allow clearing of multiple other form fields when the clear button
@@ -114,7 +114,7 @@ multiple other TextFormFields from the user's selected address suggestion.
 
 ## Additional information
 
-This package implements the oficial documention of Google Maps Places API
+This package implements the official documentation of Google Maps Places API
 and use address as types and receive a detail with address_component and geometry as fields only
 
 GitHub Repo: [https://github.com/timmaffett/google_maps_places_autocomplete_widgets]( https://github.com/timmaffett/google_maps_places_autocomplete_widgets)

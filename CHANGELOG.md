@@ -1,5 +1,10 @@
 # google_maps_places_autocomplete_widgets package
 
+## 1.2.5
+
+* Updated pubspec.yaml to add topics
+* Fix typos in README.md, dart format
+
 ## 1.2.4
 
 * Updated to current sdk and packages

@@ -180,31 +180,32 @@ mixin SuggestionOverlayMixin<T extends AddresssAutocompleteStatefulWidget>
   }
 
   void hideOverlay({bool suggestionHasBeenSelected = false}) {
-    if(entry != null) {
+    if (entry != null) {
       entry?.remove();
       entry = null;
-debugPrint('hideOverlay suggestionHasBeenSelected=$suggestionHasBeenSelected');
-      if(!suggestionHasBeenSelected) {
+      debugPrint(
+          'hideOverlay suggestionHasBeenSelected=$suggestionHasBeenSelected');
+      if (!suggestionHasBeenSelected) {
         triggerNoSuggestionCallback();
       }
     }
   }
 
   void triggerNoSuggestionCallback() {
-    if(widget.onFinishedEditingWithNoSuggestion != null) {
+    if (widget.onFinishedEditingWithNoSuggestion != null) {
       widget.onFinishedEditingWithNoSuggestion!(controller?.text ?? '');
     }
   }
+
   void _clearText() {
     setState(() {
       if (widget.onClearClick != null) {
         widget.onClearClick!();
       }
       controller?.clear();
-      if(!focusNode.hasFocus) {
+      if (!focusNode.hasFocus) {
         triggerNoSuggestionCallback();
-      }
-      else {
+      } else {
         focusNode.unfocus();
       }
       suggestions = [];
