@@ -1,5 +1,10 @@
 # google_maps_places_autocomplete_widgets package
 
+## 1.3.3
+
+* Fix dart analyze warning about using deprecated postalCodeLookup (which we use internally to allow it to continue to work
+  while at the same time being deprecated.
+
 ## 1.3.2
 
 * Correct screenshot image
